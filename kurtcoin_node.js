@@ -1,4 +1,4 @@
-﻿const crypto = require('crypto');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const mqtt = require('mqtt');
@@ -13,10 +13,11 @@ const BLOCK_REWARD = 50.0;
 
 const TOPIC_MAIN = 'kurtcoin/live/mainnet';
 const TOPIC_LEDGER = 'kurtcoin/live/ledger_state';
+const MY_CLIENT_ID = 'kurt_cli_node_' + Math.random().toString(16).substr(2, 8);
 
 // Canlı EMQX Broker WebSocket Bağlantısı
 const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-  clientId: 'kurt_cli_node_' + Math.random().toString(16).substr(2, 8),
+  clientId: MY_CLIENT_ID,
   keepalive: 60
 });
 
@@ -53,7 +54,8 @@ mqttClient.on('message', (topic, message) => {
       return;
     }
 
-    if (data.type === 'MINING') {
+    // Kendi yayınladığımız bloğu tekrar eklememek için clientId kontrolü
+    if (data.type === 'MINING' && data.senderId !== MY_CLIENT_ID) {
       if (data.height && data.height > globalHeight) {
         globalHeight = data.height;
       }
@@ -109,6 +111,7 @@ function mineLiveBlock() {
     reward: BLOCK_REWARD + ' KURT',
     time: 'Az önce',
     nonce: nonce,
+    senderId: MY_CLIENT_ID,
     timestamp: Date.now()
   };
 
