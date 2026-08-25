@@ -535,6 +535,21 @@
       }
     }
 
+    // Küresel Blok Defteri (Global Blockchain Ledger)
+    let networkLedger = {
+      '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 150.00
+    };
+
+    function recalculateBalance() {
+      if (!wallet) return;
+      if (networkLedger[wallet.address] !== undefined) {
+        if (networkLedger[wallet.address] > wallet.balance) {
+          wallet.balance = networkLedger[wallet.address];
+          saveWallet();
+        }
+      }
+    }
+
     function handleIncomingData(data) {
       if (!data || !data.hash) return;
       if (!globalFeed.some(f => f.hash === data.hash)) {
@@ -546,10 +561,19 @@
         const heightEl = document.getElementById('globalBlockHeightDisplay');
         if (heightEl) heightEl.innerText = globalHeight;
 
+        // Madencilik Ödülü Ledger Güncellemesi
+        if (data.type === 'MINING' && data.miner) {
+          networkLedger[data.miner] = (networkLedger[data.miner] || 0) + 50.00;
+          try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+          recalculateBalance();
+        }
+
         // Bize gelen transfer varsa bakiyeyi artır
         if (wallet && data.type === 'TRANSFER' && data.to && data.to.trim() === wallet.address.trim()) {
           const receivedAmount = parseFloat(data.rawAmount || data.amount);
           wallet.balance += receivedAmount;
+          networkLedger[wallet.address] = (networkLedger[wallet.address] || 0) + receivedAmount;
+          try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
           saveWallet();
           updateUI();
           alert(`🎉 YENİ CANLI TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza geçti.`);
@@ -559,6 +583,11 @@
     }
 
     function init() {
+      try {
+        const savedLedger = localStorage.getItem('kurtcoin_global_ledger');
+        if (savedLedger) networkLedger = JSON.parse(savedLedger);
+      } catch(e){}
+
       // Hafızadaki en yüksek blok seviyesinden başla
       const savedHeight = localStorage.getItem('kurtcoin_network_height');
       if (savedHeight) {
