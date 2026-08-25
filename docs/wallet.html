@@ -308,6 +308,37 @@
       font-size: 0.9rem;
     }
 
+    /* Toast Notification */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.2);
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+      max-width: 340px;
+      pointer-events: auto;
+    }
+    .toast.success { border-left: 3px solid #10b981; }
+    .toast.error { border-left: 3px solid #ef4444; }
+    .toast.info { border-left: 3px solid var(--neon-cyan); }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
     /* Mobile Responsive Media Query */
     @media (max-width: 768px) {
       aside { display: none; }
@@ -328,6 +359,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
 
   <!-- Auth Screen -->
   <div id="authScreen">
@@ -546,6 +580,15 @@
       return res;
     }
 
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
     function broadcastP2P(data) {
       if (mqttClient && mqttClient.connected) {
         mqttClient.publish(TOPIC_MAIN, JSON.stringify(data));
@@ -605,7 +648,7 @@
           publishLedger();
           saveWallet();
           updateUI();
-          alert(`🎉 YENİ CANLI TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza geçti.`);
+          showToast(`🎉 +${receivedAmount.toFixed(2)} KURT transfer alındı!`, 'success');
         }
         renderFeed();
       }
@@ -734,7 +777,7 @@
 
     function executeImport() {
       const key = document.getElementById('importKeyInput').value.trim();
-      if (!key) { alert('Lütfen geçerli bir Private Key girin!'); return; }
+      if (!key) { showToast('Lütfen geçerli bir Private Key girin!', 'error'); return; }
       
       const addr = deriveAddressFromKey(key);
       let bal = 0.00;
@@ -910,8 +953,8 @@
     function executeP2PSend() {
       const to = document.getElementById('sendAddressInput').value.trim();
       const amt = parseFloat(document.getElementById('sendAmountInput').value);
-      if (!to || isNaN(amt) || amt <= 0) { alert('Geçerli alıcı ve miktar girin!'); return; }
-      if (amt > wallet.balance) { alert('Yetersiz Bakiye!'); return; }
+      if (!to || isNaN(amt) || amt <= 0) { showToast('Geçerli alıcı ve miktar girin!', 'error'); return; }
+      if (amt > wallet.balance) { showToast('Yetersiz Bakiye!', 'error'); return; }
       
       wallet.balance -= amt;
       saveWallet();
@@ -930,17 +973,17 @@
       handleIncomingData(txData);
 
       closeModal('sendModal');
-      alert('P2P Transferi başarıyla gönderildi!');
+      showToast('✅ P2P Transferi başarıyla gönderildi!', 'success');
     }
 
     function copyMyAddress() {
       navigator.clipboard.writeText(wallet.address);
-      alert('Cüzdan Adresi Kopyalandı:\n' + wallet.address);
+      showToast('📋 Cüzdan adresi kopyalandı!', 'success');
     }
 
     function copyPrivateKey() {
       navigator.clipboard.writeText(wallet.wif);
-      alert('Gizli Anahtar Kopyalandı!');
+      showToast('📋 Gizli anahtar kopyalandı!', 'success');
     }
 
     function logoutWallet() {

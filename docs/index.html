@@ -95,15 +95,19 @@
     .btn-wallet-nav {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
       color: #050811;
-      padding: 8px 18px;
+      padding: 6px 12px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       transition: all 0.2s;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Hero Section */
@@ -354,9 +358,9 @@
           const w = JSON.parse(saved);
           const btn = document.getElementById('walletNavBtn');
           if (btn && w.address) {
-            const shortAddr = w.address.substring(0, 6) + '...' + w.address.substring(w.address.length - 4);
-            const bal = w.balance !== undefined ? parseFloat(w.balance).toFixed(2) : '0.00';
-            btn.innerHTML = '💳 ' + bal + ' KURT <span style="font-size:0.7rem;opacity:0.8;">(' + shortAddr + ')</span>';
+            const bal = w.balance !== undefined ? parseFloat(w.balance).toFixed(0) : '0';
+            btn.innerHTML = '💳 ' + bal + ' KURT';
+            btn.title = w.address;
           }
         }
       } catch(e) {}
