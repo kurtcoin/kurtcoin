@@ -1,4 +1,4 @@
-﻿// Kurtcoin Comprehensive i18n Translation Engine (All Dynamic Texts & Modals Included)
+// Kurtcoin Comprehensive i18n Translation Engine (All Dynamic Texts & Modals Included)
 const KURT_TRANSLATIONS = {
   tr: {
     // Nav & Common
@@ -91,7 +91,7 @@ const KURT_TRANSLATIONS = {
 
     modal_import_title: "🔑 Cüzdan İçe Aktar",
     modal_import_key_label: "Özel Anahtarınızı (WIF) Yapıştırın:",
-    modal_import_key_ph: "Örn: Kx85UkARHT41...",
+    modal_import_key_ph: "Örn: 58-karakterli WIF Anahtarınız...",
     modal_open_wallet_btn: "Cüzdanı Aç",
 
     // Explorer Headers & Tags
