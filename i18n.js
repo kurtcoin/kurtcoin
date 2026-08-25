@@ -1,4 +1,4 @@
-﻿// Kurtcoin Comprehensive i18n Translation Engine
+﻿// Kurtcoin Comprehensive i18n Translation Engine (All Dynamic Texts & Modals Included)
 const KURT_TRANSLATIONS = {
   tr: {
     // Nav & Common
@@ -34,7 +34,7 @@ const KURT_TRANSLATIONS = {
     spec_consensus_desc: "Madencilikle güvenceye alınan sağlam kriptografik ağ.",
     footer_text: "© 2026 Kurtcoin (KURT) Network. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.",
 
-    // Wallet UI & Actions
+    // Wallet UI & Sidebar
     wallet_title: "KURTCOIN CÜZDAN",
     wallet_desc: "Kurtcoin Katman-1 Mobil & Web Cüzdanı. Tarayıcınız doğrudan küresel P2P ağına bağlanır.",
     btn_new_wallet: "✨ Yeni Cüzdan Oluştur",
@@ -45,6 +45,8 @@ const KURT_TRANSLATIONS = {
     sidebar_backup: "🔒 Anahtar Yedekle",
     sidebar_explorer: "🔍 KurtScan Gezgini",
     sidebar_logout: "🚪 Cüzdandan Çık",
+    sidebar_p2p_status: "Canlı",
+    sidebar_network_sub: "Kurtcoin Küresel Ağ",
     topbar_title: "Cüzdan & Madenci",
     label_avail_balance: "Kullanılabilir Bakiye",
     label_live_p2p: "⚡ Canlı P2P Blokzincir",
@@ -92,7 +94,7 @@ const KURT_TRANSLATIONS = {
     modal_import_key_ph: "Örn: Kx85UkARHT41...",
     modal_open_wallet_btn: "Cüzdanı Aç",
 
-    // Explorer
+    // Explorer Headers & Tags
     exp_hero_title: "KURTCOIN BLOK GEZGİNİ",
     exp_hero_desc: "Kurtcoin Katman-1 Blokzincirindeki tüm blokları, adresleri ve canlı işlemleri gerçek zamanlı keşfedin.",
     exp_search_placeholder: "Kurtcoin Adresi (1...), Blok # veya İşlem (Tx) Hash yapıştırın...",
@@ -104,10 +106,45 @@ const KURT_TRANSLATIONS = {
     exp_stat_wallets_sub: "Aktif Blokzincir Cüzdanı",
     exp_stat_status: "Ağ & P2P Durumu",
     exp_stat_live: "● CANLI AĞ",
+    exp_pow_badge: "PoW Çift SHA-256",
+    exp_p2p_badge: "P2P Doğrudan İşlemler",
     exp_blocks_title: "📦 Son Kazılan Bloklar",
     exp_txs_title: "💸 Son Canlı Transferler",
     exp_modal_close: "Pencereyi Kapat",
-    exp_no_txs: "Henüz yeni transfer işlemi bulunmuyor."
+    exp_no_txs: "Henüz yeni transfer işlemi bulunmuyor.",
+    exp_miner_label: "Madenci",
+    exp_time_today: "Bugün",
+    exp_time_justnow: "Az önce",
+
+    // Explorer Modal Dynamic Detail Texts
+    exp_modal_addr_title: "🐺 Kurtcoin Cüzdan Adresi Detayı",
+    exp_modal_addr_label: "Adres:",
+    exp_modal_bal_label: "Kullanılabilir Bakiye:",
+    exp_modal_founder_tag: " (⭐ Kurucu Madenci)",
+    exp_modal_layer_label: "Ağ Katmanı:",
+    exp_modal_layer_val: "Kurtcoin Katman-1 Mainnet (P2P 9333)",
+    exp_modal_status_label: "Doğrulama Durumu:",
+    exp_modal_status_val: "✓ Onaylanmış & Doğrulanmış",
+
+    exp_modal_block_title: "📦 Blok Detayı & Header",
+    exp_modal_height_label: "Blok Yüksekliği:",
+    exp_modal_hash_label: "Blok Hash:",
+    exp_modal_miner_label: "Madenci (Kazıcı):",
+    exp_modal_reward_label: "Blok Ödülü:",
+    exp_modal_consensus_label: "Konsensüs:",
+    exp_modal_consensus_val: "PoW Çift SHA-256 (Zorluk: 0000)",
+    exp_modal_confirm_label: "Onay Durumu:",
+    exp_modal_confirm_val: "✓ Tam Doğrulandı",
+
+    exp_modal_tx_title: "💸 Katman-1 İşlem (Tx) Kaydı",
+    exp_modal_txid_label: "İşlem Hash (TxID):",
+    exp_modal_from_label: "Gönderen:",
+    exp_modal_to_label: "Alıcı:",
+    exp_modal_amt_label: "Transfer Miktarı:",
+    exp_modal_txtype_label: "İşlem Tipi:",
+    exp_modal_txtype_val: "Katman-1 P2P Transfer",
+    exp_modal_txconfirm_label: "Ağ Onayı:",
+    exp_modal_txconfirm_val: "✓ Blokzincire Mühürlendi"
   },
   en: {
     // Nav & Common
@@ -143,7 +180,7 @@ const KURT_TRANSLATIONS = {
     spec_consensus_desc: "Robust cryptographic network secured by proof-of-work.",
     footer_text: "© 2026 Kurtcoin (KURT) Network. Released as open source under the MIT License.",
 
-    // Wallet UI & Actions
+    // Wallet UI & Sidebar
     wallet_title: "KURTCOIN WALLET",
     wallet_desc: "Kurtcoin Layer-1 Mobile & Web Wallet. Your browser connects directly to the global P2P mesh network.",
     btn_new_wallet: "✨ Create New Wallet",
@@ -154,6 +191,8 @@ const KURT_TRANSLATIONS = {
     sidebar_backup: "🔒 Backup Key",
     sidebar_explorer: "🔍 KurtScan Explorer",
     sidebar_logout: "🚪 Log Out",
+    sidebar_p2p_status: "Live",
+    sidebar_network_sub: "Kurtcoin Global Network",
     topbar_title: "Wallet & Miner",
     label_avail_balance: "Available Balance",
     label_live_p2p: "⚡ Live P2P Blockchain",
@@ -201,7 +240,7 @@ const KURT_TRANSLATIONS = {
     modal_import_key_ph: "e.g. Kx85UkARHT41...",
     modal_open_wallet_btn: "Unlock Wallet",
 
-    // Explorer
+    // Explorer Headers & Tags
     exp_hero_title: "KURTCOIN BLOCK EXPLORER",
     exp_hero_desc: "Explore all blocks, addresses, and live transactions on the Kurtcoin Layer-1 blockchain in real time.",
     exp_search_placeholder: "Paste Kurtcoin Address (1...), Block # or Tx Hash...",
@@ -213,10 +252,45 @@ const KURT_TRANSLATIONS = {
     exp_stat_wallets_sub: "Active Blockchain Wallets",
     exp_stat_status: "Network & P2P Status",
     exp_stat_live: "● LIVE MAINNET",
+    exp_pow_badge: "PoW Dual SHA-256",
+    exp_p2p_badge: "P2P Direct Transactions",
     exp_blocks_title: "📦 Latest Mined Blocks",
     exp_txs_title: "💸 Latest Live Transfers",
     exp_modal_close: "Close Window",
-    exp_no_txs: "No recent live transactions yet."
+    exp_no_txs: "No recent live transactions yet.",
+    exp_miner_label: "Miner",
+    exp_time_today: "Today",
+    exp_time_justnow: "Just now",
+
+    // Explorer Modal Dynamic Detail Texts
+    exp_modal_addr_title: "🐺 Kurtcoin Wallet Address Details",
+    exp_modal_addr_label: "Address:",
+    exp_modal_bal_label: "Available Balance:",
+    exp_modal_founder_tag: " (⭐ Founder Miner)",
+    exp_modal_layer_label: "Network Layer:",
+    exp_modal_layer_val: "Kurtcoin Layer-1 Mainnet (P2P 9333)",
+    exp_modal_status_label: "Verification Status:",
+    exp_modal_status_val: "✓ Confirmed & Verified",
+
+    exp_modal_block_title: "📦 Block Details & Header",
+    exp_modal_height_label: "Block Height:",
+    exp_modal_hash_label: "Block Hash:",
+    exp_modal_miner_label: "Miner (Validator):",
+    exp_modal_reward_label: "Block Reward:",
+    exp_modal_consensus_label: "Consensus:",
+    exp_modal_consensus_val: "PoW Dual SHA-256 (Diff: 0000)",
+    exp_modal_confirm_label: "Confirmation Status:",
+    exp_modal_confirm_val: "✓ Fully Verified",
+
+    exp_modal_tx_title: "💸 Layer-1 Transaction (Tx) Record",
+    exp_modal_txid_label: "Tx Hash (TxID):",
+    exp_modal_from_label: "Sender:",
+    exp_modal_to_label: "Recipient:",
+    exp_modal_amt_label: "Transfer Amount:",
+    exp_modal_txtype_label: "Transaction Type:",
+    exp_modal_txtype_val: "Layer-1 P2P Transfer",
+    exp_modal_txconfirm_label: "Network Confirmation:",
+    exp_modal_txconfirm_val: "✓ Sealed on Blockchain"
   }
 };
 
@@ -237,21 +311,30 @@ function setLanguage(lang) {
   document.querySelectorAll('[id^="langToggleBtn"]').forEach(btn => {
     btn.innerText = currentLang === 'tr' ? '🇹🇷 TR' : '🇬🇧 EN';
   });
+  // Sayfa özel render fonksiyonları varsa tetikle
+  if (typeof renderBlocks === 'function') renderBlocks();
+  if (typeof renderTxs === 'function') renderTxs();
+  if (typeof renderFeed === 'function') renderFeed();
 }
 
 function toggleLanguage() {
   setLanguage(currentLang === 'tr' ? 'en' : 'tr');
 }
 
+function t(key) {
+  const dict = KURT_TRANSLATIONS[currentLang] || KURT_TRANSLATIONS.en;
+  return dict[key] || key;
+}
+
 function applyTranslations() {
-  const t = KURT_TRANSLATIONS[currentLang] || KURT_TRANSLATIONS.en;
+  const dict = KURT_TRANSLATIONS[currentLang] || KURT_TRANSLATIONS.en;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (t[key]) {
+    if (dict[key]) {
       if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-        el.placeholder = t[key];
+        el.placeholder = dict[key];
       } else {
-        el.innerText = t[key];
+        el.innerText = dict[key];
       }
     }
   });

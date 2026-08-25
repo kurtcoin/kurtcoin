@@ -352,7 +352,7 @@
     <div class="table-box">
       <div class="table-title">
         <span data-i18n="exp_blocks_title">📦 Son Kazılan Bloklar</span>
-        <span style="font-size: 0.75rem; color: var(--neon-cyan);">PoW Çift SHA-256</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);" data-i18n="exp_pow_badge">PoW Çift SHA-256</span>
       </div>
       <div id="blockList"></div>
     </div>
@@ -360,7 +360,7 @@
     <div class="table-box">
       <div class="table-title">
         <span data-i18n="exp_txs_title">💸 Son Canlı Transferler</span>
-        <span style="font-size: 0.75rem; color: var(--neon-cyan);">P2P Doğrudan İşlemler</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);" data-i18n="exp_p2p_badge">P2P Doğrudan İşlemler</span>
       </div>
       <div id="txList"></div>
     </div>
@@ -525,17 +525,22 @@
     function renderBlocks() {
       const el = document.getElementById('blockList');
       el.innerHTML = '';
+      const minerLabel = typeof t === 'function' ? t('exp_miner_label') : 'Madenci';
+      const timeToday = typeof t === 'function' ? t('exp_time_today') : 'Bugün';
+      const timeJustNow = typeof t === 'function' ? t('exp_time_justnow') : 'Az önce';
+
       blocks.slice(0, 8).forEach(b => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
         const shortHash = b.hash ? (b.hash.substring(0, 16) + '...') : '0000...';
         const shortMiner = b.miner ? (b.miner.substring(0, 6) + '...' + b.miner.substring(b.miner.length - 4)) : 'Bilinmeyen';
+        const timeDisplay = b.time === 'Bugün' ? timeToday : (b.time === 'Az önce' ? timeJustNow : b.time);
         item.innerHTML = `
           <div class="item-left">
             <div class="item-tag">#${b.height}</div>
             <div class="item-info">
               <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${b.hash}')" title="${b.hash}">${shortHash}</a>
-              <div class="item-sub">Madenci: <span style="color:var(--neon-cyan)">${shortMiner}</span> • ${b.time}</div>
+              <div class="item-sub">${minerLabel}: <span style="color:var(--neon-cyan)">${shortMiner}</span> • ${timeDisplay}</div>
             </div>
           </div>
           <div class="item-badge" style="color: #10b981;">+50 KURT</div>
@@ -546,26 +551,27 @@
 
     function renderTxs() {
       const el = document.getElementById('txList');
+      const noTxsText = typeof t === 'function' ? t('exp_no_txs') : 'Henüz yeni transfer işlemi bulunmuyor.';
       if (txs.length === 0) {
-        el.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; text-align:center;">Henüz yeni transfer işlemi bulunmuyor.</div>';
+        el.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; text-align:center;">${noTxsText}</div>`;
         return;
       }
       el.innerHTML = '';
-      txs.slice(0, 8).forEach(t => {
+      txs.slice(0, 8).forEach(tItem => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
-        const shortTxHash = t.hash ? (t.hash.substring(0, 16) + '...') : 'tx_...';
-        const fromShort = t.from ? (t.from.length > 10 ? t.from.substring(0, 5) + '...' + t.from.substring(t.from.length - 4) : t.from) : 'Genesis';
-        const toShort = t.to ? (t.to.length > 10 ? t.to.substring(0, 5) + '...' + t.to.substring(t.to.length - 4) : t.to) : 'Alıcı';
+        const shortTxHash = tItem.hash ? (tItem.hash.substring(0, 16) + '...') : 'tx_...';
+        const fromShort = tItem.from ? (tItem.from.length > 10 ? tItem.from.substring(0, 5) + '...' + tItem.from.substring(tItem.from.length - 4) : tItem.from) : 'Genesis';
+        const toShort = tItem.to ? (tItem.to.length > 10 ? tItem.to.substring(0, 5) + '...' + tItem.to.substring(tItem.to.length - 4) : tItem.to) : 'Alıcı';
         item.innerHTML = `
           <div class="item-left">
             <div class="item-tag tx-tag">Tx</div>
             <div class="item-info">
-              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${t.hash}')" title="${t.hash}">${shortTxHash}</a>
-              <div class="item-sub">${fromShort} ➔ ${toShort} • ${t.date}</div>
+              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${tItem.hash}')" title="${tItem.hash}">${shortTxHash}</a>
+              <div class="item-sub">${fromShort} ➔ ${toShort} • ${tItem.date}</div>
             </div>
           </div>
-          <div class="item-badge" style="color: var(--neon-cyan);">${t.amount}</div>
+          <div class="item-badge" style="color: var(--neon-cyan);">${tItem.amount}</div>
         `;
         el.appendChild(item);
       });
@@ -583,83 +589,83 @@
       const body = document.getElementById('modalBody');
 
       if (query.startsWith('1')) {
-        title.innerText = "🐺 Kurtcoin Cüzdan Adresi Detayı";
+        title.innerText = t('exp_modal_addr_title');
         const ledgerBal = networkLedger[query] !== undefined ? networkLedger[query].toFixed(2) + ' KURT' : '0.00 KURT';
-        const isFounder = query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' ? ' (⭐ Kurucu Madenci)' : '';
+        const isFounder = query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' ? t('exp_modal_founder_tag') : '';
         body.innerHTML = `
           <div class="modal-detail-row">
-            <span class="detail-label">Adres:</span>
+            <span class="detail-label">${t('exp_modal_addr_label')}</span>
             <span class="detail-val" style="color: var(--neon-cyan);">${query}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Kullanılabilir Bakiye:</span>
+            <span class="detail-label">${t('exp_modal_bal_label')}</span>
             <span class="detail-val" style="color: #10b981; font-weight: bold;">${ledgerBal} ${isFounder}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Ağ Katmanı:</span>
-            <span class="detail-val">Kurtcoin Katman-1 Mainnet (P2P 9333)</span>
+            <span class="detail-label">${t('exp_modal_layer_label')}</span>
+            <span class="detail-val">${t('exp_modal_layer_val')}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Doğrulama Durumu:</span>
-            <span class="detail-val" style="color: #10b981;">✓ Onaylanmış & Doğrulanmış</span>
+            <span class="detail-label">${t('exp_modal_status_label')}</span>
+            <span class="detail-val" style="color: #10b981;">${t('exp_modal_status_val')}</span>
           </div>
         `;
       } else if (!isNaN(query) || query.startsWith('0000')) {
-        title.innerText = "📦 Blok Detayı & Header";
+        title.innerText = t('exp_modal_block_title');
         const blockObj = blocks.find(b => b.hash === query || b.height == query) || { height: query, hash: query, reward: '50.00 KURT', miner: '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' };
         body.innerHTML = `
           <div class="modal-detail-row">
-            <span class="detail-label">Blok Yüksekliği:</span>
+            <span class="detail-label">${t('exp_modal_height_label')}</span>
             <span class="detail-val" style="color: var(--neon-cyan); font-weight: bold;">#${blockObj.height}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Blok Hash:</span>
+            <span class="detail-label">${t('exp_modal_hash_label')}</span>
             <span class="detail-val">${blockObj.hash}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Madenci (Kazıcı):</span>
+            <span class="detail-label">${t('exp_modal_miner_label')}</span>
             <span class="detail-val" style="color: var(--neon-cyan);">${blockObj.miner || '14FTsfBTzSBP...'}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Blok Ödülü:</span>
+            <span class="detail-label">${t('exp_modal_reward_label')}</span>
             <span class="detail-val" style="color: #10b981; font-weight: bold;">+50.00 KURT</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Konsensüs:</span>
-            <span class="detail-val">PoW Çift SHA-256 (Zorluk: 0000)</span>
+            <span class="detail-label">${t('exp_modal_consensus_label')}</span>
+            <span class="detail-val">${t('exp_modal_consensus_val')}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Onay Durumu:</span>
-            <span class="detail-val" style="color: #10b981;">✓ Tam Doğrulandı</span>
+            <span class="detail-label">${t('exp_modal_confirm_label')}</span>
+            <span class="detail-val" style="color: #10b981;">${t('exp_modal_confirm_val')}</span>
           </div>
         `;
       } else {
-        title.innerText = "💸 Katman-1 İşlem (Tx) Kaydı";
-        const txObj = txs.find(t => t.hash === query) || { hash: query, from: 'P2P Ağ', to: 'Cüzdan', amount: 'Canlı İşlem', date: 'Az önce' };
+        title.innerText = t('exp_modal_tx_title');
+        const txObj = txs.find(tItem => tItem.hash === query) || { hash: query, from: 'P2P Ağ', to: 'Cüzdan', amount: 'Canlı İşlem', date: 'Az önce' };
         body.innerHTML = `
           <div class="modal-detail-row">
-            <span class="detail-label">İşlem Hash (TxID):</span>
+            <span class="detail-label">${t('exp_modal_txid_label')}</span>
             <span class="detail-val" style="color: var(--neon-cyan);">${txObj.hash}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Gönderen:</span>
+            <span class="detail-label">${t('exp_modal_from_label')}</span>
             <span class="detail-val">${txObj.from}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Alıcı:</span>
+            <span class="detail-label">${t('exp_modal_to_label')}</span>
             <span class="detail-val">${txObj.to}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Transfer Miktarı:</span>
+            <span class="detail-label">${t('exp_modal_amt_label')}</span>
             <span class="detail-val" style="color: var(--neon-cyan); font-weight: bold;">${txObj.amount}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">İşlem Tipi:</span>
-            <span class="detail-val">Katman-1 P2P Transfer</span>
+            <span class="detail-label">${t('exp_modal_txtype_label')}</span>
+            <span class="detail-val">${t('exp_modal_txtype_val')}</span>
           </div>
           <div class="modal-detail-row">
-            <span class="detail-label">Ağ Onayı:</span>
-            <span class="detail-val" style="color: #10b981;">✓ Blokzincire Mühürlendi</span>
+            <span class="detail-label">${t('exp_modal_txconfirm_label')}</span>
+            <span class="detail-val" style="color: #10b981;">${t('exp_modal_txconfirm_val')}</span>
           </div>
         `;
       }
