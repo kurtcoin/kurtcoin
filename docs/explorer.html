@@ -253,6 +253,18 @@
     let txs = [];
 
     function init() {
+      // Geçmiş transferleri LocalStorage'dan da yükle
+      try {
+        const savedTxs = localStorage.getItem('kurtcoin_global_txs');
+        if (savedTxs) {
+          txs = JSON.parse(savedTxs);
+        }
+        const savedBlocks = localStorage.getItem('kurtcoin_global_blocks');
+        if (savedBlocks) {
+          blocks = JSON.parse(savedBlocks);
+        }
+      } catch (e) {}
+
       renderBlocks();
       renderTxs();
 
@@ -260,18 +272,24 @@
         const data = e.data;
         if (!data) return;
         if (data.type === 'MINING') {
-          blocks.unshift({
-            height: data.height,
-            hash: data.hash,
-            miner: data.miner,
-            reward: "50 KURT",
-            time: "Az önce"
-          });
-          document.getElementById('statBlockHeight').innerText = data.height;
-          renderBlocks();
+          if (!blocks.some(b => b.hash === data.hash)) {
+            blocks.unshift({
+              height: data.height,
+              hash: data.hash,
+              miner: data.miner,
+              reward: "50 KURT",
+              time: "Az önce"
+            });
+            document.getElementById('statBlockHeight').innerText = data.height;
+            try { localStorage.setItem('kurtcoin_global_blocks', JSON.stringify(blocks)); } catch(e){}
+            renderBlocks();
+          }
         } else if (data.type === 'TRANSFER') {
-          txs.unshift(data);
-          renderTxs();
+          if (!txs.some(t => t.hash === data.hash)) {
+            txs.unshift(data);
+            try { localStorage.setItem('kurtcoin_global_txs', JSON.stringify(txs)); } catch(e){}
+            renderTxs();
+          }
         }
       };
     }
