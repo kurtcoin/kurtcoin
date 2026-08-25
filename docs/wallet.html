@@ -529,9 +529,13 @@
           if (data.height && data.height > globalHeight) globalHeight = data.height;
           document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
 
-          if (wallet && data.to === wallet.address && data.type === 'TRANSFER') {
-            wallet.balance += parseFloat(data.amount);
+          // Eğer işlem bize gelen bir transfer ise bakiyemizi artır
+          if (wallet && data.type === 'TRANSFER' && data.to.trim() === wallet.address.trim()) {
+            const receivedAmount = parseFloat(data.rawAmount || data.amount);
+            wallet.balance += receivedAmount;
             saveWallet();
+            updateUI();
+            alert(`🎉 YENİ TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza başarıyla geçti.`);
           }
           renderFeed();
         }
@@ -716,6 +720,7 @@
         title: `P2P: ${wallet.address.substring(0, 4)}.. -> ${to.substring(0, 4)}..`,
         date: new Date().toLocaleTimeString(),
         amount: amt.toFixed(2) + ' KURT',
+        rawAmount: amt,
         from: wallet.address,
         to: to,
         hash: 'tx_' + Math.random().toString(36).substring(2, 15)
