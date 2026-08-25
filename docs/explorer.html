@@ -262,13 +262,23 @@
     }
     @media (max-width: 768px) {
       nav { padding: 12px 4%; }
-      .search-hero { padding: 24px 4% 20px; }
-      .search-hero h1 { font-size: 1.5rem; }
-      .stats-container { grid-template-columns: 1fr; padding: 0 4% 20px; gap: 10px; }
-      .explorer-grid { grid-template-columns: 1fr; padding: 0 4% 40px; gap: 16px; }
-      .table-box { padding: 16px; }
-      .modal { padding: 12px; }
-      .modal-card { padding: 18px; }
+      .search-hero { padding: 20px 4% 16px; }
+      .search-hero h1 { font-size: 1.35rem; }
+      .search-hero p { font-size: 0.8rem; margin-bottom: 14px; }
+      .search-bar-wrap { flex-direction: column; gap: 8px; padding: 6px; }
+      .search-bar-wrap input { padding: 8px 10px; font-size: 0.82rem; }
+      .search-btn { width: 100%; padding: 10px; }
+      .stats-container { grid-template-columns: 1fr; padding: 0 4% 16px; gap: 10px; }
+      .explorer-grid { grid-template-columns: 1fr; padding: 0 4% 30px; gap: 14px; }
+      .table-box { padding: 14px 12px; }
+      .table-title { font-size: 0.9rem; }
+      .explorer-item { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 0; }
+      .item-left { width: 100%; }
+      .item-badge { align-self: flex-end; font-size: 0.78rem; }
+      .modal { padding: 10px; }
+      .modal-card { padding: 16px; }
+      .modal-detail-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+      .detail-val { text-align: left; font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -517,12 +527,13 @@
       blocks.slice(0, 8).forEach(b => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
+        const shortHash = b.hash ? (b.hash.substring(0, 16) + '...') : '0000...';
         const shortMiner = b.miner ? (b.miner.substring(0, 6) + '...' + b.miner.substring(b.miner.length - 4)) : 'Bilinmeyen';
         item.innerHTML = `
           <div class="item-left">
             <div class="item-tag">#${b.height}</div>
             <div class="item-info">
-              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${b.hash}')">${b.hash}</a>
+              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${b.hash}')" title="${b.hash}">${shortHash}</a>
               <div class="item-sub">Madenci: <span style="color:var(--neon-cyan)">${shortMiner}</span> • ${b.time}</div>
             </div>
           </div>
@@ -542,13 +553,14 @@
       txs.slice(0, 8).forEach(t => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
+        const shortTxHash = t.hash ? (t.hash.substring(0, 16) + '...') : 'tx_...';
         const fromShort = t.from ? (t.from.length > 10 ? t.from.substring(0, 5) + '...' + t.from.substring(t.from.length - 4) : t.from) : 'Genesis';
         const toShort = t.to ? (t.to.length > 10 ? t.to.substring(0, 5) + '...' + t.to.substring(t.to.length - 4) : t.to) : 'Alıcı';
         item.innerHTML = `
           <div class="item-left">
             <div class="item-tag tx-tag">Tx</div>
             <div class="item-info">
-              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${t.hash}')">${t.hash}</a>
+              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${t.hash}')" title="${t.hash}">${shortTxHash}</a>
               <div class="item-sub">${fromShort} ➔ ${toShort} • ${t.date}</div>
             </div>
           </div>
