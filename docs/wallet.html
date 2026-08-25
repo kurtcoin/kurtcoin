@@ -678,20 +678,24 @@
       
       const addr = deriveAddressFromKey(key);
       let bal = 0.00;
-      
-      // Kaydedilmiş bakiyeyi kontrol et
-      const savedBalByAddr = localStorage.getItem('kurtcoin_bal_' + addr);
-      const savedBalByKey = localStorage.getItem('kurtcoin_keybal_' + key);
-      
-      if (savedBalByKey) {
-        bal = parseFloat(savedBalByKey);
-      } else if (savedBalByAddr) {
-        bal = parseFloat(savedBalByAddr);
-      } else if (key.includes('Kx85UkARHT41')) {
-        bal = 150.00;
+
+      // 1. Önce Küresel Blok Defterinden (Ledger) bak
+      if (networkLedger[addr] !== undefined) {
+        bal = networkLedger[addr];
+      } else {
+        // 2. Yerel Depolamadan bak
+        const savedBalByAddr = localStorage.getItem('kurtcoin_bal_' + addr);
+        const savedBalByKey = localStorage.getItem('kurtcoin_keybal_' + key);
+        
+        if (savedBalByKey) {
+          bal = parseFloat(savedBalByKey);
+        } else if (savedBalByAddr) {
+          bal = parseFloat(savedBalByAddr);
+        } else if (key.includes('Kx85UkARHT41')) {
+          bal = 150.00;
+        }
       }
 
-      // Eğer kurucu anahtarıysa ve ilk kez açılıyorsa ama kayıt yoksa 150'den başlat
       if (key.includes('Kx85UkARHT41') && bal < 150.00) {
         bal = 150.00;
       }
@@ -700,6 +704,9 @@
       saveWallet();
       closeModal('importModal');
       showApp();
+
+      // Ağa bağlandığında tekrar senkronize et
+      broadcastP2P({ type: 'SYNC_REQUEST' });
     }
 
     function saveWallet() {
