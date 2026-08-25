@@ -9,5 +9,12 @@ echo   Blok Suresi: 1 Dakika
 echo ==================================================================
 echo.
 cd /d "%~dp0"
+
+if not exist "node_modules\mqtt" (
+    echo [*] Ilk calisma icin ag modulu hazirlaniyor...
+    call npm install mqtt ws --no-audit --no-fund --silent
+    echo.
+)
+
 node kurtcoin_node.js
 pause
