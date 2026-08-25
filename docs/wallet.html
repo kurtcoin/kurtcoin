@@ -2,12 +2,11 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kurtcoin Live P2P Web Wallet & Miner — The Wolfpack Network</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- P2P Decentralized Mesh DB (GunDB) -->
   <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
   <style>
     :root {
@@ -22,9 +21,10 @@
       --border-glow: rgba(0, 242, 254, 0.25);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; overflow-x: hidden; }
 
+    /* Auth Screen */
     #authScreen {
       position: fixed;
       inset: 0;
@@ -39,66 +39,59 @@
       background: var(--bg-sidebar);
       border: 1px solid var(--border-glow);
       border-radius: 24px;
-      padding: 40px;
-      max-width: 500px;
+      padding: 32px 24px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 0 50px rgba(0, 242, 254, 0.15);
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.15);
     }
-    .auth-box img { width: 80px; height: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 12px var(--neon-cyan)); }
-    .auth-box h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 12px; }
-    .auth-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px; line-height: 1.6; }
+    .auth-box img { width: 70px; height: 70px; margin-bottom: 16px; filter: drop-shadow(0 0 10px var(--neon-cyan)); }
+    .auth-box h1 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; margin-bottom: 10px; }
+    .auth-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.5; }
     .auth-btn {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       transition: all 0.2s;
     }
-    .btn-create {
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
-      border: none;
-      color: #050811;
-    }
-    .btn-import {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: #fff;
-    }
-    .btn-import:hover { border-color: var(--neon-cyan); }
+    .btn-create { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)); border: none; color: #050811; }
+    .btn-import { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: #fff; }
 
-    #appLayout { display: none; width: 100%; height: 100%; }
+    /* Layout */
+    #appLayout { display: none; width: 100%; height: 100vh; flex-direction: row; }
 
+    /* Sidebar (Desktop) */
     aside {
-      width: 260px;
+      width: 250px;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      padding: 24px 16px;
+      padding: 20px 16px;
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding-bottom: 24px;
+      gap: 10px;
+      padding-bottom: 18px;
       border-bottom: 1px solid var(--border);
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
     }
-    .brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
-    .nav-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+    .nav-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
     .nav-item {
-      padding: 12px 16px;
+      padding: 12px 14px;
       border-radius: 10px;
       cursor: pointer;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: all 0.2s;
     }
     .nav-item:hover, .nav-item.active {
@@ -110,9 +103,9 @@
       margin-top: auto;
       background: rgba(0, 242, 254, 0.05);
       border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.85rem;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.8rem;
     }
     .status-dot {
       display: inline-block;
@@ -126,72 +119,108 @@
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+    /* Mobile Bottom Navigation */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-sidebar);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      z-index: 1000;
+      justify-content: space-around;
+      backdrop-filter: blur(12px);
+    }
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .mobile-nav-item.active { color: var(--neon-cyan); }
+    .mobile-nav-item span { font-size: 1.2rem; }
+
+    /* Main Area */
     main {
       flex: 1;
       overflow-y: auto;
-      padding: 32px 40px;
+      padding: 24px 32px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
     }
-    .topbar { display: flex; justify-content: space-between; align-items: center; }
-    .topbar h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .topbar h1 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; }
     .wallet-chip {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--neon-cyan);
       font-family: monospace;
       cursor: pointer;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
+    /* Cards */
     .balance-card {
       background: linear-gradient(135deg, rgba(14, 23, 42, 0.9), rgba(6, 182, 212, 0.15));
       border: 1px solid var(--border-glow);
-      border-radius: 20px;
-      padding: 28px 32px;
+      border-radius: 18px;
+      padding: 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    .balance-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+    .balance-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
     .balance-amount {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem;
+      font-size: 2.4rem;
       font-weight: 900;
       color: #fff;
-      margin: 6px 0;
+      margin: 4px 0;
       display: flex;
       align-items: baseline;
-      gap: 12px;
+      gap: 8px;
     }
-    .balance-amount span { font-size: 1.4rem; color: var(--neon-cyan); }
+    .balance-amount span { font-size: 1.2rem; color: var(--neon-cyan); }
 
-    /* Live Web Miner Box */
+    /* Miner Box */
     .miner-box {
       background: rgba(0, 242, 254, 0.04);
       border: 1px solid var(--border-glow);
       border-radius: 16px;
-      padding: 20px 24px;
+      padding: 18px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    .miner-info { display: flex; gap: 24px; align-items: center; }
+    .miner-info { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
     .miner-stat { display: flex; flex-direction: column; }
-    .miner-stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-    .miner-stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--neon-cyan); }
+    .miner-stat-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; font-weight: 700; }
+    .miner-stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--neon-cyan); }
     .miner-btn {
       background: linear-gradient(135deg, #10b981, #059669);
       border: none;
       color: #fff;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -200,96 +229,114 @@
     }
     .miner-btn.active {
       background: linear-gradient(135deg, #ef4444, #dc2626);
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
     }
 
-    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .action-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 14px;
+      padding: 12px;
       border-radius: 12px;
       cursor: pointer;
       text-align: center;
       font-weight: 700;
+      font-size: 0.9rem;
       transition: all 0.2s;
     }
-    .action-btn:hover {
-      border-color: var(--neon-cyan);
-      background: rgba(0, 242, 254, 0.08);
-      transform: translateY(-2px);
-    }
+    .action-btn:hover { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.08); }
 
-    .section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; }
-    .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
     .tx-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      animation: fadeIn 0.4s ease-in-out;
+      gap: 10px;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
     .tx-item:last-child { border-bottom: none; }
-    .tx-info { display: flex; align-items: center; gap: 12px; }
+    .tx-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .tx-icon {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: rgba(16, 185, 129, 0.1);
       color: #10b981;
       border-radius: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      flex-shrink: 0;
     }
 
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
       justify-content: center;
       align-items: center;
       z-index: 3000;
+      padding: 16px;
     }
     .modal-card {
       background: var(--bg-sidebar);
       border: 1px solid var(--border-glow);
       border-radius: 20px;
-      width: 460px;
-      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
     }
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .input-group { margin-bottom: 14px; }
+    .input-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
     .input-group input, .input-group textarea {
       width: 100%;
       background: var(--bg-main);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px 12px;
       color: #fff;
       outline: none;
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Responsive Media Query */
+    @media (max-width: 768px) {
+      aside { display: none; }
+      .mobile-nav { display: flex; }
+      #appLayout { flex-direction: column; }
+      main { padding: 16px 16px 90px 16px; gap: 16px; }
+      .balance-amount { font-size: 2rem; }
+      .action-grid { grid-template-columns: 1fr 1fr; }
+      .action-grid .action-btn:last-child { grid-column: span 2; }
+      .miner-info { width: 100%; justify-content: space-between; }
+      .miner-btn { width: 100%; justify-content: center; }
+      .topbar h1 { font-size: 1.3rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Auth Screen -->
   <div id="authScreen">
     <div class="auth-box">
       <img src="kurtcoin_logo.svg" alt="Kurtcoin">
-      <h1>KURTCOIN P2P CÜZDANI</h1>
+      <h1>KURTCOIN CÜZDAN</h1>
       <p class="auth-desc">
-        Kurtcoin Canlı P2P Katman-1 Blokzincir Ağı. Tarayıcınız doğrudan küresel düğümlere bağlanır.
+        Kurtcoin Katman-1 Mobil & Web Cüzdanı. Tarayıcınız doğrudan küresel P2P ağına bağlanır.
       </p>
       <button class="auth-btn btn-create" onclick="createNewWallet()">✨ Yeni Cüzdan Oluştur</button>
-      <button class="auth-btn btn-import" onclick="openImportModal()">🔑 Özel Anahtar (Private Key) İle Aç</button>
+      <button class="auth-btn btn-import" onclick="openImportModal()">🔑 Özel Anahtarla Aç</button>
     </div>
   </div>
 
+  <!-- App Layout -->
   <div id="appLayout">
+    <!-- Desktop Sidebar -->
     <aside>
       <div class="brand">
         <img src="kurtcoin_logo.svg" alt="Kurtcoin">
@@ -303,27 +350,29 @@
         <li class="nav-item" style="color: #ef4444;" onclick="logoutWallet()">🚪 Cüzdandan Çık</li>
       </ul>
       <div class="node-status">
-        <div><span class="status-dot"></span><strong>P2P Mesh:</strong> <span id="peerCountText">Bağlı</span></div>
-        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Kurtcoin Küresel Canlı Blokzincir</div>
+        <div><span class="status-dot"></span><strong>P2P Mesh:</strong> Canlı</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Kurtcoin Küresel Ağ</div>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main>
       <div class="topbar">
-        <h1>Canlı Blokzincir Paneli</h1>
+        <h1>Cüzdan & Madenci</h1>
         <div class="wallet-chip" id="walletChip" title="Kopyala" onclick="copyMyAddress()">
           <span id="headerAddress">...</span> 📋
         </div>
       </div>
 
+      <!-- Balance Card -->
       <div class="balance-card">
         <div>
           <div class="balance-label">Kullanılabilir Bakiye</div>
           <div class="balance-amount" id="balanceDisplay">0.00 <span>KURT</span></div>
-          <div style="color: #10b981; font-weight: 600;">⚡ Küresel P2P Canlı Ağ Bakiyesi</div>
+          <div style="color: #10b981; font-weight: 600; font-size: 0.9rem;">⚡ Canlı P2P Blokzincir</div>
         </div>
         <div>
-          <button class="auth-btn btn-create" style="margin: 0; padding: 12px 24px;" onclick="openModal('receiveModal')">
+          <button class="auth-btn btn-create" style="margin: 0; padding: 10px 18px; font-size: 0.85rem;" onclick="openModal('receiveModal')">
             📥 Bakiye Al (QR)
           </button>
         </div>
@@ -333,97 +382,113 @@
       <div class="miner-box">
         <div class="miner-info">
           <div class="miner-stat">
-            <span class="miner-stat-label">Madenci Durumu</span>
-            <span class="miner-stat-val" id="minerStatusText" style="color: var(--text-muted);">DURDURULDU</span>
+            <span class="miner-stat-label">Madenci</span>
+            <span class="miner-stat-val" id="minerStatusText" style="color: var(--text-muted); font-size: 0.95rem;">DURDURULDU</span>
           </div>
           <div class="miner-stat">
-            <span class="miner-stat-label">Canlı Hash Gücü</span>
+            <span class="miner-stat-label">Hash Gücü</span>
             <span class="miner-stat-val" id="hashrateDisplay">0 H/s</span>
           </div>
           <div class="miner-stat">
-            <span class="miner-stat-label">Ağdaki Toplam Blok</span>
+            <span class="miner-stat-label">Toplam Blok</span>
             <span class="miner-stat-val" id="globalBlockHeightDisplay">0</span>
           </div>
           <div class="miner-stat">
-            <span class="miner-stat-label">Sizin Kazdığınız</span>
+            <span class="miner-stat-label">Kazdığınız</span>
             <span class="miner-stat-val" id="blocksFoundDisplay">0</span>
           </div>
         </div>
-        <div>
-          <button class="miner-btn" id="minerToggleBtn" onclick="toggleWebMiner()">
-            ▶️ Madenciliği Başlat
-          </button>
-        </div>
+        <button class="miner-btn" id="minerToggleBtn" onclick="toggleWebMiner()">
+          ▶️ Madenciliği Başlat
+        </button>
       </div>
 
+      <!-- Action Grid -->
       <div class="action-grid">
-        <div class="action-btn" onclick="openModal('sendModal')">📤 P2P Transfer Gönder</div>
-        <div class="action-btn" onclick="openModal('receiveModal')">📥 QR Kod & Adres</div>
-        <div class="action-btn" onclick="openModal('backupModal')">🔑 Gizli Anahtarımı Gör</div>
+        <div class="action-btn" onclick="openModal('sendModal')">📤 Gönder</div>
+        <div class="action-btn" onclick="openModal('receiveModal')">📥 Bakiye Al</div>
+        <div class="action-btn" onclick="openModal('backupModal')">🔑 Gizli Anahtarım</div>
       </div>
 
+      <!-- Feed -->
       <div class="section-box">
         <div class="section-title">
-          <span>🌐 Küresel Canlı Blok ve Transfer Akışı</span>
-          <span style="font-size: 0.8rem; color: var(--neon-cyan); font-weight: normal;">● Canlı P2P Senkronizasyonu</span>
+          <span>🌐 Küresel Canlı Blok Akışı</span>
+          <span style="font-size: 0.75rem; color: var(--neon-cyan); font-weight: normal;">● Canlı Senkron</span>
         </div>
         <div id="txList"></div>
       </div>
     </main>
+
+    <!-- Mobile Bottom Bar -->
+    <div class="mobile-nav">
+      <div class="mobile-nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <span>📊</span>Panel
+      </div>
+      <div class="mobile-nav-item" onclick="openModal('sendModal')">
+        <span>📤</span>Gönder
+      </div>
+      <div class="mobile-nav-item" onclick="openModal('receiveModal')">
+        <span>📥</span>Al
+      </div>
+      <div class="mobile-nav-item" onclick="toggleWebMiner()">
+        <span>⛏️</span>Kazım
+      </div>
+      <div class="mobile-nav-item" onclick="openModal('backupModal')">
+        <span>🔑</span>Anahtar
+      </div>
+    </div>
   </div>
 
-  <!-- Send Modal -->
+  <!-- Modals -->
   <div class="modal" id="sendModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">📤 Canlı P2P Transfer</h2>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;">📤 Canlı P2P Transfer</h2>
       <div class="input-group">
         <label>Alıcı Kurtcoin Adresi:</label>
         <input type="text" id="sendAddressInput" placeholder="Örn: 14FTsfBTzSBP...">
       </div>
       <div class="input-group">
-        <label>Gönderilecek Miktar (KURT):</label>
+        <label>Miktar (KURT):</label>
         <input type="number" id="sendAmountInput" placeholder="0.00">
       </div>
-      <div style="display: flex; gap: 12px; margin-top: 24px;">
-        <button class="auth-btn btn-create" style="margin: 0;" onclick="executeP2PSend()">Ağa Yayınla & Gönder</button>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="auth-btn btn-create" style="margin: 0;" onclick="executeP2PSend()">Gönder</button>
         <button class="auth-btn btn-import" style="margin: 0; width: auto;" onclick="closeModal('sendModal')">Kapat</button>
       </div>
     </div>
   </div>
 
-  <!-- Receive Modal -->
   <div class="modal" id="receiveModal">
     <div class="modal-card" style="text-align: center;">
-      <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">📥 Bakiye Alma Adresiniz</h2>
-      <div style="background: #fff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 16px;">
-        <img id="qrImage" src="" alt="QR">
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;">📥 Bakiye Alma Adresiniz</h2>
+      <div style="background: #fff; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 14px;">
+        <img id="qrImage" src="" alt="QR" style="width: 160px; height: 160px;">
       </div>
-      <p id="receiveAddressText" style="font-family: monospace; font-size: 0.85rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 20px;"></p>
+      <p id="receiveAddressText" style="font-family: monospace; font-size: 0.8rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 16px;"></p>
       <button class="auth-btn btn-create" onclick="copyMyAddress()">Adresi Kopyala</button>
       <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('receiveModal')">Kapat</button>
     </div>
   </div>
 
-  <!-- Backup Modal -->
   <div class="modal" id="backupModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">🔒 Özel Anahtarınız (Private Key)</h2>
-      <p style="color: #ef4444; font-size: 0.85rem; margin-bottom: 16px;">⚠️ UYARI: Bu anahtarı asla kimseyle paylaşmayın!</p>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;">🔒 Özel Anahtarınız</h2>
+      <p style="color: #ef4444; font-size: 0.8rem; margin-bottom: 14px;">⚠️ UYARI: Bu anahtarı kimseyle paylaşmayın!</p>
       <div class="input-group">
         <label>WIF Private Key:</label>
-        <textarea id="privateKeyText" rows="3" readonly style="font-family: monospace; font-size: 0.85rem;"></textarea>
+        <textarea id="privateKeyText" rows="3" readonly style="font-family: monospace; font-size: 0.8rem;"></textarea>
       </div>
-      <button class="auth-btn btn-create" onclick="copyPrivateKey()">Gizli Anahtarı Kopyala</button>
+      <button class="auth-btn btn-create" onclick="copyPrivateKey()">Kopyala</button>
       <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('backupModal')">Kapat</button>
     </div>
   </div>
 
-  <!-- Import Modal -->
   <div class="modal" id="importModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">🔑 Cüzdan İçe Aktar</h2>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;">🔑 Cüzdan İçe Aktar</h2>
       <div class="input-group">
-        <label>Özel Anahtarınızı (Private Key WIF) Yapıştırın:</label>
+        <label>Özel Anahtarınızı (WIF) Yapıştırın:</label>
         <input type="text" id="importKeyInput" placeholder="Örn: Kx85UkARHT41...">
       </div>
       <button class="auth-btn btn-create" onclick="executeImport()">Cüzdanı Aç</button>
@@ -432,7 +497,6 @@
   </div>
 
   <script>
-    // P2P GunDB Canlı Düğüm Ağı (Relay Peers)
     const gun = Gun([
       'https://gun-manhattan.herokuapp.com/gun',
       'https://relay.peer.ooo/gun',
@@ -445,7 +509,7 @@
     let minerInterval = null;
     let totalHashes = 0;
     let myBlocksFound = 0;
-    let globalHeight = 3; // Başlangıç Genesis + 2 Blok
+    let globalHeight = 3;
     let globalFeed = [];
 
     function generateRandomBase58(len, prefix) {
@@ -458,7 +522,6 @@
     }
 
     function init() {
-      // P2P Canlı Ağ Dinleyicisi
       kurtNetwork.map().on((data, key) => {
         if (!data || !data.hash) return;
         if (!globalFeed.some(f => f.hash === data.hash)) {
@@ -466,12 +529,9 @@
           if (data.height && data.height > globalHeight) globalHeight = data.height;
           document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
 
-          // Eğer işlem bize gelen bir transfer veya madencilik ise bakiyeyi artır
-          if (wallet) {
-            if (data.to === wallet.address && data.type === 'TRANSFER') {
-              wallet.balance += parseFloat(data.amount);
-              saveWallet();
-            }
+          if (wallet && data.to === wallet.address && data.type === 'TRANSFER') {
+            wallet.balance += parseFloat(data.amount);
+            saveWallet();
           }
           renderFeed();
         }
@@ -522,7 +582,7 @@
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('appLayout').style.display = 'flex';
       
-      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 8) + '...' + wallet.address.substring(wallet.address.length - 6);
+      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 6) + '...' + wallet.address.substring(wallet.address.length - 4);
       document.getElementById('receiveAddressText').innerText = wallet.address;
       document.getElementById('privateKeyText').value = wallet.wif;
       document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + wallet.address;
@@ -543,12 +603,12 @@
         item.innerHTML = `
           <div class="tx-info">
             <div class="tx-icon" style="${t.type === 'TRANSFER' ? 'background: rgba(0, 242, 254, 0.1); color: var(--neon-cyan);' : ''}">${t.type === 'TRANSFER' ? '💸' : '⛏️'}</div>
-            <div>
-              <div style="font-weight: 700; font-size: 0.95rem;">${t.title}</div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">${t.date} • ${t.hash.substring(0, 14)}...</div>
+            <div style="min-width: 0;">
+              <div style="font-weight: 700; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.title}</div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">${t.date}</div>
             </div>
           </div>
-          <div style="font-family: 'Orbitron'; font-weight: 700; color: ${t.type === 'TRANSFER' ? 'var(--neon-cyan)' : '#10b981'};">
+          <div style="font-family: 'Orbitron'; font-weight: 700; font-size: 0.9rem; color: ${t.type === 'TRANSFER' ? 'var(--neon-cyan)' : '#10b981'}; white-space: nowrap;">
             ${t.amount}
           </div>
         `;
@@ -568,13 +628,13 @@
       const statusText = document.getElementById('minerStatusText');
 
       if (isMining) {
-        btn.innerHTML = '⏹️ Madenciliği Durdur';
+        btn.innerHTML = '⏹️ Durdur';
         btn.classList.add('active');
-        statusText.innerText = 'P2P AĞINDA KAZILIYOR';
+        statusText.innerText = 'KAZILIYOR';
         statusText.style.color = '#10b981';
         startMiningLoop();
       } else {
-        btn.innerHTML = '▶️ Madenciliği Başlat';
+        btn.innerHTML = '▶️ Başlat';
         btn.classList.remove('active');
         statusText.innerText = 'DURDURULDU';
         statusText.style.color = 'var(--text-muted)';
@@ -590,7 +650,7 @@
       minerInterval = setInterval(async () => {
         if (!isMining) return;
 
-        for (let i = 0; i < 250; i++) {
+        for (let i = 0; i < 200; i++) {
           totalHashes++;
           hashesInSec++;
           const nonce = Math.floor(Math.random() * 100000000);
@@ -599,18 +659,16 @@
           const h1 = await sha256(data);
           const h2 = await sha256(h1);
 
-          // PoW Eşiği
           if (h2.startsWith("0000")) {
             myBlocksFound++;
             globalHeight++;
             wallet.balance += 50.00;
             saveWallet();
 
-            // P2P Ağına Yeni Bloğu Canlı Yayınla (Broadcast to World)
             const blockData = {
               height: globalHeight,
               type: 'MINING',
-              title: `Madencilik Blok Ödülü (#${globalHeight})`,
+              title: `Blok #${globalHeight} Kazıldı`,
               date: new Date().toLocaleTimeString(),
               amount: '+50.00 KURT',
               miner: wallet.address,
@@ -641,10 +699,9 @@
       wallet.balance -= amt;
       saveWallet();
 
-      // P2P Ağına Transferi Canlı Yayınla
       const txData = {
         type: 'TRANSFER',
-        title: `P2P Transfer: ${wallet.address.substring(0, 6)} -> ${to.substring(0, 6)}`,
+        title: `P2P: ${wallet.address.substring(0, 4)}.. -> ${to.substring(0, 4)}..`,
         date: new Date().toLocaleTimeString(),
         amount: amt.toFixed(2) + ' KURT',
         from: wallet.address,
@@ -654,17 +711,17 @@
       kurtNetwork.set(txData);
 
       closeModal('sendModal');
-      alert('P2P Transferi başarıyla imzalandı ve tüm dünyaya canlı yayınlandı! 🚀');
+      alert('P2P Transferi başarıyla gönderildi!');
     }
 
     function copyMyAddress() {
       navigator.clipboard.writeText(wallet.address);
-      alert('Cüzdan Adresiniz Kopyalandı:\n' + wallet.address);
+      alert('Cüzdan Adresi Kopyalandı:\n' + wallet.address);
     }
 
     function copyPrivateKey() {
       navigator.clipboard.writeText(wallet.wif);
-      alert('Gizli Anahtarınız Kopyalandı!');
+      alert('Gizli Anahtar Kopyalandı!');
     }
 
     function logoutWallet() {
