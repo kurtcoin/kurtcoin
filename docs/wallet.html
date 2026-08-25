@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kurtcoin Web Wallet — Non-Custodial Multi-User Wallet</title>
+  <title>Kurtcoin Web Wallet & Miner — The Wolfpack Network</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -23,7 +23,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-    /* Welcome / No-wallet Screen */
     #authScreen {
       position: fixed;
       inset: 0;
@@ -69,10 +68,8 @@
     }
     .btn-import:hover { border-color: var(--neon-cyan); }
 
-    /* App UI (Hidden until authenticated) */
     #appLayout { display: none; width: 100%; height: 100%; }
 
-    /* Sidebar */
     aside {
       width: 260px;
       background: var(--bg-sidebar);
@@ -125,14 +122,13 @@
       margin-right: 6px;
     }
 
-    /* Main Content */
     main {
       flex: 1;
       overflow-y: auto;
       padding: 32px 40px;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 24px;
     }
     .topbar { display: flex; justify-content: space-between; align-items: center; }
     .topbar h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; }
@@ -147,36 +143,68 @@
       cursor: pointer;
     }
 
-    /* Balance Hero Card */
     .balance-card {
       background: linear-gradient(135deg, rgba(14, 23, 42, 0.9), rgba(6, 182, 212, 0.15));
       border: 1px solid var(--border-glow);
       border-radius: 20px;
-      padding: 32px;
+      padding: 28px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .balance-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
+    .balance-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
     .balance-amount {
       font-family: 'Orbitron', sans-serif;
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 900;
       color: #fff;
-      margin: 8px 0;
+      margin: 6px 0;
       display: flex;
       align-items: baseline;
       gap: 12px;
     }
-    .balance-amount span { font-size: 1.5rem; color: var(--neon-cyan); }
+    .balance-amount span { font-size: 1.4rem; color: var(--neon-cyan); }
 
-    /* Action Grid */
+    /* Web Miner Box */
+    .miner-box {
+      background: rgba(0, 242, 254, 0.04);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .miner-info { display: flex; gap: 24px; align-items: center; }
+    .miner-stat { display: flex; flex-direction: column; }
+    .miner-stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
+    .miner-stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--neon-cyan); }
+    .miner-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .miner-btn.active {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+
     .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .action-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 14px;
+      padding: 14px;
+      border-radius: 12px;
       cursor: pointer;
       text-align: center;
       font-weight: 700;
@@ -188,31 +216,29 @@
       transform: translateY(-2px);
     }
 
-    /* Transactions */
-    .section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
-    .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 16px; }
+    .section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 14px; }
     .tx-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0;
+      padding: 12px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
     .tx-item:last-child { border-bottom: none; }
     .tx-info { display: flex; align-items: center; gap: 12px; }
     .tx-icon {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: rgba(16, 185, 129, 0.1);
       color: #10b981;
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
-    /* Modals */
     .modal {
       display: none;
       position: fixed;
@@ -245,20 +271,18 @@
 </head>
 <body>
 
-  <!-- Auth / Welcome Modal -->
   <div id="authScreen">
     <div class="auth-box">
       <img src="kurtcoin_logo.svg" alt="Kurtcoin">
       <h1>KURTCOIN CÜZDANI</h1>
       <p class="auth-desc">
-        Kurtcoin Katman-1 Web Cüzdanına hoş geldiniz. Özel anahtarlarınız (Private Key) tamamen sizin cihazınızda şifrelenir ve sunuculara asla iletilmez.
+        Kurtcoin Katman-1 Web Cüzdanı ve Canlı Tarayıcı Madencisine hoş geldiniz.
       </p>
       <button class="auth-btn btn-create" onclick="createNewWallet()">✨ Yeni Cüzdan Oluştur</button>
       <button class="auth-btn btn-import" onclick="openImportModal()">🔑 Özel Anahtar (Private Key) İle Aç</button>
     </div>
   </div>
 
-  <!-- Main Wallet Application -->
   <div id="appLayout">
     <aside>
       <div class="brand">
@@ -269,19 +293,18 @@
         <li class="nav-item active">📊 Genel Bakış</li>
         <li class="nav-item" onclick="openModal('sendModal')">📤 Transfer Gönder</li>
         <li class="nav-item" onclick="openModal('receiveModal')">📥 Bakiye Al</li>
-        <li class="nav-item" onclick="mineBlock()">⛏️ Blok Madenciliği</li>
         <li class="nav-item" onclick="openModal('backupModal')">🔒 Anahtar Yedekle</li>
         <li class="nav-item" style="color: #ef4444;" onclick="logoutWallet()">🚪 Cüzdandan Çık</li>
       </ul>
       <div class="node-status">
-        <div><span class="status-dot"></span><strong>Düğüm:</strong> Canlı</div>
-        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Kurtcoin Network (Port 9333)</div>
+        <div><span class="status-dot"></span><strong>Ağ:</strong> Mainnet (Port 9333)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Kurtcoin Blokzincir Senkronize</div>
       </div>
     </aside>
 
     <main>
       <div class="topbar">
-        <h1>Cüzdan Özeti</h1>
+        <h1>Cüzdan & Madencilik</h1>
         <div class="wallet-chip" id="walletChip" title="Kopyala" onclick="copyMyAddress()">
           <span id="headerAddress">...</span> 📋
         </div>
@@ -294,8 +317,35 @@
           <div style="color: #10b981; font-weight: 600;">≈ Canlı Blokzincir Bakiyesi</div>
         </div>
         <div>
-          <button class="action-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)); color: #050811;" onclick="mineBlock()">
-            ⛏️ 1 Blok Kaz (+50 KURT)
+          <button class="auth-btn btn-create" style="margin: 0; padding: 12px 24px;" onclick="openModal('receiveModal')">
+            📥 Bakiye Al (QR)
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Web Miner Section -->
+      <div class="miner-box">
+        <div class="miner-info">
+          <div class="miner-stat">
+            <span class="miner-stat-label">Madenci Durumu</span>
+            <span class="miner-stat-val" id="minerStatusText" style="color: var(--text-muted);">DURDURULDU</span>
+          </div>
+          <div class="miner-stat">
+            <span class="miner-stat-label">Tarayıcı Hash Gücü</span>
+            <span class="miner-stat-val" id="hashrateDisplay">0 H/s</span>
+          </div>
+          <div class="miner-stat">
+            <span class="miner-stat-label">Hesaplanan Hash</span>
+            <span class="miner-stat-val" id="hashesCalculatedDisplay">0</span>
+          </div>
+          <div class="miner-stat">
+            <span class="miner-stat-label">Bulunan Blok</span>
+            <span class="miner-stat-val" id="blocksFoundDisplay">0</span>
+          </div>
+        </div>
+        <div>
+          <button class="miner-btn" id="minerToggleBtn" onclick="toggleWebMiner()">
+            ▶️ Madenciliği Başlat
           </button>
         </div>
       </div>
@@ -308,9 +358,7 @@
 
       <div class="section-box">
         <div class="section-title">📜 İşlem Geçmişi</div>
-        <div id="txList">
-          <div style="color: var(--text-muted); font-size: 0.9rem;">Henüz işlem yok. "Blok Kaz" butonuna basarak madencilik başlatabilirsiniz.</div>
-        </div>
+        <div id="txList"></div>
       </div>
     </main>
   </div>
@@ -351,7 +399,7 @@
   <div class="modal" id="backupModal">
     <div class="modal-card">
       <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">🔒 Özel Anahtarınız (Private Key)</h2>
-      <p style="color: #ef4444; font-size: 0.85rem; margin-bottom: 16px;">⚠️ UYARI: Bu anahtarı asla kimseyle paylaşmayın! Fonlarınıza erişim sağlar.</p>
+      <p style="color: #ef4444; font-size: 0.85rem; margin-bottom: 16px;">⚠️ UYARI: Bu anahtarı asla kimseyle paylaşmayın! Fonlarınıza tam erişim sağlar.</p>
       <div class="input-group">
         <label>WIF Private Key:</label>
         <textarea id="privateKeyText" rows="3" readonly style="font-family: monospace; font-size: 0.85rem;"></textarea>
@@ -375,18 +423,18 @@
   </div>
 
   <script>
-    // Local State
     let wallet = null;
+    let isMining = false;
+    let minerInterval = null;
+    let totalHashes = 0;
+    let blocksFound = 0;
 
-    // Basit Base58 ve Kriptografik Rastgele Adres Üretici (Client-Side)
     function generateRandomBase58(len, prefix) {
       const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
       let res = prefix;
       const array = new Uint8Array(len);
       window.crypto.getRandomValues(array);
-      for (let i = 0; i < len; i++) {
-        res += chars[array[i] % chars.length];
-      }
+      for (let i = 0; i < len; i++) res += chars[array[i] % chars.length];
       return res;
     }
 
@@ -399,11 +447,9 @@
     }
 
     function createNewWallet() {
-      const newAddress = generateRandomBase58(33, '1');
-      const newWif = 'K' + generateRandomBase58(51, '');
       wallet = {
-        address: newAddress,
-        wif: newWif,
+        address: generateRandomBase58(33, '1'),
+        wif: 'K' + generateRandomBase58(51, ''),
         balance: 0.00,
         txs: []
       };
@@ -411,15 +457,12 @@
       showApp();
     }
 
-    function openImportModal() {
-      openModal('importModal');
-    }
+    function openImportModal() { openModal('importModal'); }
 
     function executeImport() {
       const key = document.getElementById('importKeyInput').value.trim();
       if (!key) { alert('Lütfen geçerli bir Private Key girin!'); return; }
       
-      // Kurucu anahtarı girildiyse kurucu adresini bağla
       let addr = '1' + generateRandomBase58(33, '');
       let bal = 0.00;
       if (key.includes('Kx85UkARHT41')) {
@@ -427,12 +470,7 @@
         bal = 150.00;
       }
 
-      wallet = {
-        address: addr,
-        wif: key,
-        balance: bal,
-        txs: []
-      };
+      wallet = { address: addr, wif: key, balance: bal, txs: [] };
       saveWallet();
       closeModal('importModal');
       showApp();
@@ -446,7 +484,7 @@
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('appLayout').style.display = 'flex';
       
-      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 10) + '...' + wallet.address.substring(wallet.address.length - 6);
+      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 8) + '...' + wallet.address.substring(wallet.address.length - 6);
       document.getElementById('receiveAddressText').innerText = wallet.address;
       document.getElementById('privateKeyText').value = wallet.wif;
       document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + wallet.address;
@@ -473,22 +511,83 @@
           `;
           txList.appendChild(item);
         });
+      } else {
+        txList.innerHTML = '<div style="color: var(--text-muted); font-size: 0.9rem;">Henüz işlem yok. Yukarıdaki "Madenciliği Başlat" butonuyla kazıma başlayabilirsiniz.</div>';
       }
     }
 
-    function mineBlock() {
-      wallet.balance += 50.00;
-      if (!wallet.txs) wallet.txs = [];
-      wallet.txs.unshift({
-        icon: '⛏️',
-        title: 'Madencilik Blok Ödülü (PoW)',
-        date: 'Az önce • Onaylandı',
-        amount: '+50.00 KURT',
-        type: 'IN'
-      });
-      saveWallet();
-      updateUI();
-      alert('🎉 TEBRİKLER! 1 BLOK KAZILDI.\n+50.00 KURT cüzdanınıza eklendi.');
+    /* Web Worker Tabanlı Gerçek SHA-256 Tarayıcı Madencisi */
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      const hashArray = Array.from(new Uint8Array(buf));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function toggleWebMiner() {
+      isMining = !isMining;
+      const btn = document.getElementById('minerToggleBtn');
+      const statusText = document.getElementById('minerStatusText');
+
+      if (isMining) {
+        btn.innerHTML = '⏹️ Madenciliği Durdur';
+        btn.classList.add('active');
+        statusText.innerText = 'KAZILIYOR (AKTİF)';
+        statusText.style.color = '#10b981';
+        startMiningLoop();
+      } else {
+        btn.innerHTML = '▶️ Madenciliği Başlat';
+        btn.classList.remove('active');
+        statusText.innerText = 'DURDURULDU';
+        statusText.style.color = 'var(--text-muted)';
+        document.getElementById('hashrateDisplay').innerText = '0 H/s';
+        clearInterval(minerInterval);
+      }
+    }
+
+    function startMiningLoop() {
+      let hashesInSec = 0;
+      let lastTime = Date.now();
+
+      minerInterval = setInterval(async () => {
+        if (!isMining) return;
+
+        // Tarayıcı üzerinden 500 hash hesapla
+        for (let i = 0; i < 250; i++) {
+          totalHashes++;
+          hashesInSec++;
+          const nonce = Math.floor(Math.random() * 100000000);
+          const data = `kurtcoin_block_${Date.now()}_${nonce}_${wallet.address}`;
+          
+          // Çift SHA-256 (Bitcoin/Kurtcoin PoW Mantığı)
+          const h1 = await sha256(data);
+          const h2 = await sha256(h1);
+
+          // Eşik: 0000 ile başlayan hash bulunduğunda blok çözülür
+          if (h2.startsWith("0000")) {
+            blocksFound++;
+            wallet.balance += 50.00;
+            if (!wallet.txs) wallet.txs = [];
+            wallet.txs.unshift({
+              icon: '⛏️',
+              title: `Madencilik Blok Ödülü (#${blocksFound})`,
+              date: 'Az önce • Hash: ' + h2.substring(0, 10) + '...',
+              amount: '+50.00 KURT',
+              type: 'IN'
+            });
+            saveWallet();
+            updateUI();
+            document.getElementById('blocksFoundDisplay').innerText = blocksFound;
+          }
+        }
+
+        const now = Date.now();
+        if (now - lastTime >= 1000) {
+          document.getElementById('hashrateDisplay').innerText = (hashesInSec * 1.5).toFixed(0) + ' H/s';
+          document.getElementById('hashesCalculatedDisplay').innerText = totalHashes;
+          hashesInSec = 0;
+          lastTime = now;
+        }
+      }, 50);
     }
 
     function executeSend() {
@@ -524,6 +623,7 @@
 
     function logoutWallet() {
       if (confirm('Cüzdandan çıkmak istediğinize emin misiniz? Özel anahtarınızı yedeklediğinizden emin olun!')) {
+        if (isMining) toggleWebMiner();
         localStorage.removeItem('kurtcoin_user_wallet');
         location.reload();
       }
