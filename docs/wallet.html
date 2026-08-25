@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurtcoin Core — Resmi Masaüstü Cüzdanı</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #060913;
+      --bg-sidebar: #0a0f1d;
+      --bg-card: #0f172a;
+      --neon-cyan: #00f2fe;
+      --neon-blue: #4facfe;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 242, 254, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+    /* Sidebar */
+    aside {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+    .brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+    .nav-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .nav-item {
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--neon-cyan);
+      border: 1px solid var(--border-glow);
+    }
+    .node-status {
+      margin-top: auto;
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.85rem;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      margin-right: 6px;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topbar h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; }
+    .wallet-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--neon-cyan);
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    /* Balance Hero Card */
+    .balance-card {
+      background: linear-gradient(135deg, rgba(14, 23, 42, 0.9), rgba(6, 182, 212, 0.15));
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .balance-label { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .balance-amount {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 8px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .balance-amount span { font-size: 1.5rem; color: var(--neon-cyan); }
+    .balance-usd { color: #10b981; font-weight: 600; font-size: 1.1rem; }
+
+    /* Quick Action Buttons */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .action-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Transactions Table */
+    .section-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 16px; }
+    .tx-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-info { display: flex; align-items: center; gap: 12px; }
+    .tx-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+    .tx-title { font-weight: 700; font-size: 0.95rem; }
+    .tx-date { color: var(--text-muted); font-size: 0.8rem; }
+    .tx-amount { font-family: 'Orbitron', sans-serif; font-weight: 700; color: #10b981; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      width: 450px;
+      padding: 32px;
+    }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .input-group input {
+      width: 100%;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+      outline: none;
+    }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-send {
+      flex: 1;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      border: none;
+      color: #050811;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-close {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside>
+    <div class="brand">
+      <img src="kurtcoin_logo.svg" alt="Kurtcoin Logo">
+      KURTCOIN
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active">📊 Genel Bakış</li>
+      <li class="nav-item" onclick="openSendModal()">📤 Transfer Gönder</li>
+      <li class="nav-item" onclick="openReceiveModal()">📥 Bakiye Al</li>
+      <li class="nav-item" onclick="startLocalMining()">⛏️ Blok Madenciliği</li>
+    </ul>
+    <div class="node-status">
+      <div><span class="status-dot"></span><strong>Düğüm:</strong> Senkronize</div>
+      <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Ağ: Kurtcoin Mainnet (Port 9333)</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <div class="topbar">
+      <h1>Cüzdan Özeti</h1>
+      <div class="wallet-chip" id="walletChip" title="Kopyalamak için tıklayın" onclick="copyAddress()">
+        14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA 📋
+      </div>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div>
+        <div class="balance-label">Kullanılabilir Bakiye</div>
+        <div class="balance-amount" id="balanceDisplay">150.00 <span>KURT</span></div>
+        <div class="balance-usd">≈ $150.00 USD (Wolfpack Değeri)</div>
+      </div>
+      <div>
+        <button class="action-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)); color: #050811;" onclick="startLocalMining()">
+          ⛏️ 1 Blok Kaz (+50 KURT)
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Action Grid -->
+    <div class="action-grid">
+      <div class="action-btn" onclick="openSendModal()">📤 KURT Gönder</div>
+      <div class="action-btn" onclick="openReceiveModal()">📥 QR / Adres Al</div>
+      <div class="action-btn" onclick="alert('Kurtcoin Blokzincir Düğümü Senkronize! Tüm bloklar güncel.')">🔄 Zinciri Yenile</div>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="section-box">
+      <div class="section-title">📜 Son Blokzincir İşlemleri</div>
+      <div id="txList">
+        <div class="tx-item">
+          <div class="tx-info">
+            <div class="tx-icon">⛏️</div>
+            <div>
+              <div class="tx-title">Madencilik Blok Ödülü (#2)</div>
+              <div class="tx-date">Bugün, 12:17 • Onaylandı (PoW SHA-256)</div>
+            </div>
+          </div>
+          <div class="tx-amount">+50.00 KURT</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-info">
+            <div class="tx-icon">⛏️</div>
+            <div>
+              <div class="tx-title">Madencilik Blok Ödülü (#1)</div>
+              <div class="tx-date">Bugün, 12:16 • Onaylandı (PoW SHA-256)</div>
+            </div>
+          </div>
+          <div class="tx-amount">+50.00 KURT</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-info">
+            <div class="tx-icon">👑</div>
+            <div>
+              <div class="tx-title">Genesis Kurucu Bloğu (#0)</div>
+              <div class="tx-date">2026 • Kurtcoin Manifestosu</div>
+            </div>
+          </div>
+          <div class="tx-amount">+50.00 KURT</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Send Modal -->
+  <div class="modal" id="sendModal">
+    <div class="modal-card">
+      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">📤 Kurtcoin Gönder</h2>
+      <div class="input-group">
+        <label>Alıcı Kurtcoin Adresi:</label>
+        <input type="text" id="sendToAddress" placeholder="Örn: 14FTsfBTzSBP...">
+      </div>
+      <div class="input-group">
+        <label>Gönderilecek Miktar (KURT):</label>
+        <input type="number" id="sendAmount" placeholder="0.00">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-send" onclick="sendKurt()">Transferi İmzala & Gönder</button>
+        <button class="btn-close" onclick="closeModal('sendModal')">İptal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Receive Modal -->
+  <div class="modal" id="receiveModal">
+    <div class="modal-card" style="text-align: center;">
+      <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">📥 Bakiye Alma Adresiniz</h2>
+      <div style="background: #fff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 16px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA" alt="QR Code">
+      </div>
+      <p style="font-family: monospace; font-size: 0.9rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 20px;">
+        14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA
+      </p>
+      <button class="btn-send" onclick="copyAddress()">Adresi Kopyala</button>
+      <button class="btn-close" style="margin-top: 10px; width: 100%;" onclick="closeModal('receiveModal')">Kapat</button>
+    </div>
+  </div>
+
+  <script>
+    let currentBalance = 150.00;
+
+    function copyAddress() {
+      navigator.clipboard.writeText('14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA');
+      alert('Kurtcoin Cüzdan Adresiniz Kopyalandı!\n14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA');
+    }
+
+    function openSendModal() { document.getElementById('sendModal').style.display = 'flex'; }
+    function openReceiveModal() { document.getElementById('receiveModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function sendKurt() {
+      const to = document.getElementById('sendToAddress').value;
+      const amt = parseFloat(document.getElementById('sendAmount').value);
+      if (!to || isNaN(amt) || amt <= 0) {
+        alert('Lütfen geçerli bir alıcı adresi ve miktar girin!');
+        return;
+      }
+      if (amt > currentBalance) {
+        alert('Yetersiz Bakiye! Mevcut bakiyeniz: ' + currentBalance + ' KURT');
+        return;
+      }
+      currentBalance -= amt;
+      document.getElementById('balanceDisplay').innerHTML = currentBalance.toFixed(2) + ' <span>KURT</span>';
+      
+      const txList = document.getElementById('txList');
+      const item = document.createElement('div');
+      item.className = 'tx-item';
+      item.innerHTML = `
+        <div class="tx-info">
+          <div class="tx-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">📤</div>
+          <div>
+            <div class="tx-title">Gönderilen Transfer</div>
+            <div class="tx-date">Az önce • Alıcı: ${to.substring(0, 10)}...</div>
+          </div>
+        </div>
+        <div class="tx-amount" style="color: #ef4444;">-${amt.toFixed(2)} KURT</div>
+      `;
+      txList.insertBefore(item, txList.firstChild);
+      closeModal('sendModal');
+      alert('Transfer başarıyla imzalandı ve Kurtcoin ağına yayınlandı! 🚀');
+    }
+
+    function startLocalMining() {
+      currentBalance += 50.00;
+      document.getElementById('balanceDisplay').innerHTML = currentBalance.toFixed(2) + ' <span>KURT</span>';
+      
+      const txList = document.getElementById('txList');
+      const item = document.createElement('div');
+      item.className = 'tx-item';
+      item.innerHTML = `
+        <div class="tx-info">
+          <div class="tx-icon">⛏️</div>
+          <div>
+            <div class="tx-title">Yeni Blok Madencilik Ödülü</div>
+            <div class="tx-date">Az önce • Onaylandı (PoW SHA-256)</div>
+          </div>
+        </div>
+        <div class="tx-amount">+50.00 KURT</div>
+      `;
+      txList.insertBefore(item, txList.firstChild);
+      alert('🎉 YENİ BLOK KAZILDI!\n+50.00 KURT cüzdanınıza eklendi. Güncel bakiye: ' + currentBalance.toFixed(2) + ' KURT');
+    }
+  </script>
+</body>
+</html>
