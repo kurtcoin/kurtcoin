@@ -38,23 +38,27 @@
 
 ---
 
-## ⛏️ How to Mine Kurtcoin ($KURT)
+## ⛏️ How to Run Node & Mine Kurtcoin ($KURT)
 
-Kurtcoin supports dual mining methods for global decentralization:
+Anyone who downloads this release can run a node and mine $KURT using any of these methods:
 
-### 1. 🌐 Instant Web Browser Mining (Zero-Install)
-Anyone in the world can mine $KURT directly from their mobile or desktop browser without downloading any software:
+### 1. 🪟 Windows Users (Instant 1-Click Launch)
+If you downloaded the release zip on Windows:
+1. Double-click **`start_mining.bat`** (or open terminal and run `node kurtcoin_node.js`).
+2. The node connects to the live P2P network (Port 9333) and automatically starts mining blocks.
+3. Every mined block (+50 KURT reward) is broadcast to the global network and visible on [KurtScan](https://kurtcoin.github.io/kurtcoin/explorer.html).
+
+### 2. 🌐 Web Browser Mining (No Install / Mobile & Desktop)
 1. Open the [Kurtcoin Web Wallet](https://kurtcoin.github.io/kurtcoin/wallet.html).
-2. Create or import your wallet.
-3. Click **"▶️ Start Mining"** to begin hashing blocks immediately.
+2. Create a new wallet or import your private key.
+3. Click **"▶️ Start Mining"** to hash blocks directly from your browser.
 
-### 2. 💻 Full Node & CPU/GPU Mining (From Release)
-For maximum hashpower and dedicated nodes:
+### 3. 🐧 Linux & macOS / C++ Core Node
 ```bash
-# 1. Start the Kurtcoin Node
+# Start the background daemon
 ./kurtcoind -daemon
 
-# 2. Start Solo Mining with CLI
+# Mine blocks to your address
 ./kurtcoin-cli generatetoaddress 1 <YOUR_KURT_ADDRESS>
 ```
 
