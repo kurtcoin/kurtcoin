@@ -1,20 +1,24 @@
-# Security Policy
+# 🐺 Kurtcoin (KURT) Security Policy
 
 ## Supported Versions
 
-See our website for versions of Bitcoin Core that are currently supported with
-security updates: https://bitcoincore.org/en/lifecycle/#schedule
+Only the latest official release branch of Kurtcoin is actively supported with security patches and critical network updates.
 
-## Reporting a Vulnerability
+| Version | Supported | Status |
+| :--- | :---: | :--- |
+| `v1.0.0 (Genesis)` | ✅ Yes | Active Mainnet |
+| `< v1.0.0` | ❌ No | Deprecated / Dev |
 
-To report security issues send an email to security@bitcoincore.org (not for support).
+---
 
-The following keys may be used to communicate sensitive information to developers:
+## 🛡️ Reporting a Vulnerability
 
-| Name | Fingerprint |
-|------|-------------|
-| Michael Ford | E777 299F C265 DD04 7930  70EB 944D 35F9 AC3D B76A |
-| Ava Chow | 1528 1230 0785 C964 44D3  334D 1756 5732 E08E 5E41 |
-| Niklas Gögge | 2CBB F208 E594 BF43 9B5F 276C 7465 CFFF 6793 242E |
+The Kurtcoin team takes the security of our blockchain, P2P network, and cryptographic consensus seriously. If you discover a security vulnerability or exploit, please **do not open a public GitHub issue**.
 
-You can import a key by running the following command with that individual’s fingerprint: `gpg --keyserver hkps://keys.openpgp.org --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints containing spaces.
+Instead, report it responsibly via:
+
+* **GitHub Security Advisory:** [Report a Vulnerability privately](https://github.com/kurtcoin/kurtcoin/security/advisories/new)
+* **Official Security Contact:** `320931476+kurtcoin@users.noreply.github.com`
+
+Please include detailed steps to reproduce the issue, along with any relevant proof-of-concept code. We will review and patch critical vulnerabilities promptly.
+
