@@ -511,6 +511,7 @@
     });
 
     const TOPIC_MAIN = 'kurtcoin/live/mainnet';
+    const TOPIC_LEDGER = 'kurtcoin/live/ledger_state';
 
     let wallet = null;
     let isMining = false;
@@ -535,6 +536,15 @@
       }
     }
 
+    // Ledger'ı MQTT broker'a RETAINED olarak yaz — broker 7/24 açık full node gibi davranır
+    // Herhangi bir cihaz bağlandığında broker bu mesajı anında teslim eder
+    function publishLedger() {
+      if (mqttClient && mqttClient.connected) {
+        const state = JSON.stringify({ ledger: networkLedger, height: globalHeight, ts: Date.now() });
+        mqttClient.publish(TOPIC_LEDGER, state, { retain: true });
+      }
+    }
+
     // Küresel Blok Defteri (Global Blockchain Ledger)
     let networkLedger = {
       '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 150.00
@@ -546,6 +556,7 @@
         if (networkLedger[wallet.address] > wallet.balance) {
           wallet.balance = networkLedger[wallet.address];
           saveWallet();
+          try { updateUI(); } catch(e) {}
         }
       }
     }
@@ -565,6 +576,7 @@
         if (data.type === 'MINING' && data.miner) {
           networkLedger[data.miner] = (networkLedger[data.miner] || 0) + 50.00;
           try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+          publishLedger();
           recalculateBalance();
         }
 
@@ -574,6 +586,7 @@
           wallet.balance += receivedAmount;
           networkLedger[wallet.address] = (networkLedger[wallet.address] || 0) + receivedAmount;
           try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+          publishLedger();
           saveWallet();
           updateUI();
           alert(`🎉 YENİ CANLI TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza geçti.`);
@@ -597,14 +610,41 @@
 
       mqttClient.on('connect', () => {
         mqttClient.subscribe(TOPIC_MAIN);
-        // Ağdaki diğer aktif cihazlardan tüm güncel bakiyeleri ve zincir durumunu talep et
+        // Retained Ledger topic'e abone ol — broker anında en son kaydedilmiş zincir durumunu teslim eder
+        mqttClient.subscribe(TOPIC_LEDGER);
+        // Aktif düğümlerden de güncelleme iste (yedek mekanizma)
         broadcastP2P({ type: 'SYNC_REQUEST' });
       });
 
       mqttClient.on('message', (topic, message) => {
         try {
           const data = JSON.parse(message.toString());
-          
+
+          // ═══════════════════════════════════════════════════════════
+          // RETAINED LEDGER: Broker'dan gelen kalıcı zincir durumu
+          // Bu mesaj broker'da 7/24 saklanır ve her yeni bağlanan 
+          // cihaza anında teslim edilir (hiçbir başka cihaz açık 
+          // olmasa bile!)
+          // ═══════════════════════════════════════════════════════════
+          if (topic === TOPIC_LEDGER && data.ledger) {
+            const remoteLedger = data.ledger;
+            // En yüksek bakiyeleri al (merge)
+            for (const [addr, bal] of Object.entries(remoteLedger)) {
+              if (!networkLedger[addr] || remoteLedger[addr] > networkLedger[addr]) {
+                networkLedger[addr] = remoteLedger[addr];
+              }
+            }
+            if (data.height && data.height > globalHeight) {
+              globalHeight = data.height;
+              const hEl = document.getElementById('globalBlockHeightDisplay');
+              if (hEl) hEl.innerText = globalHeight;
+              localStorage.setItem('kurtcoin_network_height', globalHeight.toString());
+            }
+            try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+            recalculateBalance();
+            return;
+          }
+
           // Eğer başka bir cihaz ağa yeni bağlandıysa ve senkronizasyon istiyorsa güncel Ledger'ı ona gönder
           if (data.type === 'SYNC_REQUEST') {
             broadcastP2P({
@@ -617,7 +657,11 @@
 
           // Senkronizasyon cevabı geldiyse hafızamızı ve bakiyemizi hemen güncelle
           if (data.type === 'SYNC_RESPONSE' && data.ledger) {
-            Object.assign(networkLedger, data.ledger);
+            for (const [addr, bal] of Object.entries(data.ledger)) {
+              if (!networkLedger[addr] || data.ledger[addr] > networkLedger[addr]) {
+                networkLedger[addr] = data.ledger[addr];
+              }
+            }
             if (data.height > globalHeight) {
               globalHeight = data.height;
               document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
