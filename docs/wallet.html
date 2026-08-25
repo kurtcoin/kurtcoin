@@ -312,6 +312,8 @@
     @media (max-width: 768px) {
       aside { display: none; }
       .mobile-nav { display: flex; }
+      .mobile-topbar { display: flex !important; }
+      .topbar { display: none !important; }
       #appLayout { flex-direction: column; }
       main { padding: 16px 16px 90px 16px; gap: 16px; width: 100%; }
       .balance-amount { font-size: 1.9rem; }
@@ -320,7 +322,6 @@
       .miner-info { width: 100%; justify-content: space-between; gap: 10px; }
       .miner-stat-val { font-size: 0.95rem; }
       .miner-btn { width: 100%; justify-content: center; padding: 14px; font-size: 1rem; }
-      .topbar h1 { font-size: 1.25rem; }
       .modal { padding: 12px; }
       .modal-card { padding: 20px; border-radius: 16px; }
     }
@@ -345,15 +346,16 @@
   <div id="appLayout">
     <!-- Desktop Sidebar -->
     <aside>
-      <div class="brand">
+      <a href="index.html" class="brand" style="text-decoration: none; color: #fff;">
         <img src="kurtcoin_logo.svg" alt="Kurtcoin">
         KURTCOIN
-      </div>
+      </a>
       <ul class="nav-list">
         <li class="nav-item active">📊 Genel Bakış</li>
         <li class="nav-item" onclick="openModal('sendModal')">📤 Transfer Gönder</li>
         <li class="nav-item" onclick="openModal('receiveModal')">📥 Bakiye Al</li>
         <li class="nav-item" onclick="openModal('backupModal')">🔒 Anahtar Yedekle</li>
+        <li class="nav-item" onclick="window.location.href='explorer.html'">🔍 KurtScan Gezgini</li>
         <li class="nav-item" style="color: #ef4444;" onclick="logoutWallet()">🚪 Cüzdandan Çık</li>
       </ul>
       <div class="node-status">
@@ -364,6 +366,17 @@
 
     <!-- Main Content -->
     <main>
+      <!-- Mobil Üst Bar: Logo + Ana Sayfa -->
+      <div class="mobile-topbar" style="display: none; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 4px;">
+        <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1rem;">
+          <img src="kurtcoin_logo.svg" alt="K" style="width: 28px; height: 28px; filter: drop-shadow(0 0 6px var(--neon-cyan));">
+          KURTCOIN
+        </a>
+        <div class="wallet-chip" style="font-size: 0.7rem; padding: 6px 10px;" onclick="copyMyAddress()">
+          <span id="headerAddressMobile">...</span> 📋
+        </div>
+      </div>
+
       <div class="topbar">
         <h1>Cüzdan & Madenci</h1>
         <div class="wallet-chip" id="walletChip" title="Kopyala" onclick="copyMyAddress()">
@@ -443,6 +456,9 @@
       </div>
       <div class="mobile-nav-item" onclick="openModal('backupModal')">
         <span>🔑</span>Anahtar
+      </div>
+      <div class="mobile-nav-item" onclick="logoutWallet()" style="color: #ef4444;">
+        <span>🚪</span>Çıkış
       </div>
     </div>
   </div>
@@ -769,7 +785,10 @@
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('appLayout').style.display = 'flex';
       
-      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 6) + '...' + wallet.address.substring(wallet.address.length - 4);
+      const shortAddr = wallet.address.substring(0, 6) + '...' + wallet.address.substring(wallet.address.length - 4);
+      document.getElementById('headerAddress').innerText = shortAddr;
+      const mobileAddr = document.getElementById('headerAddressMobile');
+      if (mobileAddr) mobileAddr.innerText = shortAddr;
       document.getElementById('receiveAddressText').innerText = wallet.address;
       document.getElementById('privateKeyText').value = wallet.wif;
       document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + wallet.address;
