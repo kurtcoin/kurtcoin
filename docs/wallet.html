@@ -623,9 +623,6 @@
       
       const addr = deriveAddressFromKey(key);
       let bal = 0.00;
-      if (key.includes('Kx85UkARHT41')) {
-        bal = 150.00;
-      }
       
       // Kaydedilmiş bakiyeyi kontrol et
       const savedBalByAddr = localStorage.getItem('kurtcoin_bal_' + addr);
@@ -635,6 +632,13 @@
         bal = parseFloat(savedBalByKey);
       } else if (savedBalByAddr) {
         bal = parseFloat(savedBalByAddr);
+      } else if (key.includes('Kx85UkARHT41')) {
+        bal = 150.00;
+      }
+
+      // Eğer kurucu anahtarıysa ve ilk kez açılıyorsa ama kayıt yoksa 150'den başlat
+      if (key.includes('Kx85UkARHT41') && bal < 150.00) {
+        bal = 150.00;
       }
 
       wallet = { address: addr, wif: key, balance: bal };
