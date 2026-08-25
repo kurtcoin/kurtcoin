@@ -583,15 +583,38 @@
 
     function openImportModal() { openModal('importModal'); }
 
+    // Basit ve Deterministik Hash Fonksiyonu (Aynı Key -> Her Zaman Aynı Adres)
+    function deriveAddressFromKey(key) {
+      if (key.includes('Kx85UkARHT41')) {
+        return '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
+      }
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let hash = 0;
+      for (let i = 0; i < key.length; i++) {
+        hash = ((hash << 5) - hash) + key.charCodeAt(i);
+        hash |= 0;
+      }
+      let addr = '1';
+      let seed = Math.abs(hash);
+      for (let i = 0; i < 33; i++) {
+        seed = (seed * 9301 + 49297) % 233280;
+        addr += chars[Math.floor((seed / 233280) * chars.length)];
+      }
+      return addr;
+    }
+
     function executeImport() {
       const key = document.getElementById('importKeyInput').value.trim();
       if (!key) { alert('Lütfen geçerli bir Private Key girin!'); return; }
       
-      let addr = '1' + generateRandomBase58(33, '');
+      const addr = deriveAddressFromKey(key);
       let bal = 0.00;
       if (key.includes('Kx85UkARHT41')) {
-        addr = '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
         bal = 150.00;
+      } else {
+        // Varsa kaydedilmiş bakiyesini çek
+        const savedBal = localStorage.getItem('kurtcoin_bal_' + addr);
+        if (savedBal) bal = parseFloat(savedBal);
       }
 
       wallet = { address: addr, wif: key, balance: bal };
@@ -602,6 +625,9 @@
 
     function saveWallet() {
       localStorage.setItem('kurtcoin_user_wallet', JSON.stringify(wallet));
+      if (wallet && wallet.address) {
+        localStorage.setItem('kurtcoin_bal_' + wallet.address, wallet.balance.toString());
+      }
       updateUI();
     }
 
