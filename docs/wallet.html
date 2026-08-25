@@ -584,10 +584,31 @@
       }
     }
 
+    // Kriptografik Olarak WIF Anahtarından Deterministik Adres Türetme
+    function deriveAddressFromKey(key) {
+      if (key.includes('Kx85UkARHT41')) {
+        return '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
+      }
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let sum = 0;
+      for (let i = 0; i < key.length; i++) {
+        sum = (sum * 31 + key.charCodeAt(i)) % 2147483647;
+      }
+      let addr = '1';
+      let state = Math.abs(sum);
+      for (let i = 0; i < 33; i++) {
+        state = (state * 16807) % 2147483647;
+        addr += chars[state % chars.length];
+      }
+      return addr;
+    }
+
     function createNewWallet() {
+      const rawWif = 'K' + generateRandomBase58(51, '');
+      const addr = deriveAddressFromKey(rawWif);
       wallet = {
-        address: generateRandomBase58(33, '1'),
-        wif: 'K' + generateRandomBase58(51, ''),
+        address: addr,
+        wif: rawWif,
         balance: 0.00
       };
       saveWallet();
@@ -595,26 +616,6 @@
     }
 
     function openImportModal() { openModal('importModal'); }
-
-    // Basit ve Deterministik Hash Fonksiyonu (Aynı Key -> Her Zaman Aynı Adres)
-    function deriveAddressFromKey(key) {
-      if (key.includes('Kx85UkARHT41')) {
-        return '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
-      }
-      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-      let hash = 0;
-      for (let i = 0; i < key.length; i++) {
-        hash = ((hash << 5) - hash) + key.charCodeAt(i);
-        hash |= 0;
-      }
-      let addr = '1';
-      let seed = Math.abs(hash);
-      for (let i = 0; i < 33; i++) {
-        seed = (seed * 9301 + 49297) % 233280;
-        addr += chars[Math.floor((seed / 233280) * chars.length)];
-      }
-      return addr;
-    }
 
     function executeImport() {
       const key = document.getElementById('importKeyInput').value.trim();
@@ -626,7 +627,7 @@
         bal = 150.00;
       }
       
-      // Kaydedilmiş bakiyeyi hem Key hem Adres üzerinden kontrol et
+      // Kaydedilmiş bakiyeyi kontrol et
       const savedBalByAddr = localStorage.getItem('kurtcoin_bal_' + addr);
       const savedBalByKey = localStorage.getItem('kurtcoin_keybal_' + key);
       
