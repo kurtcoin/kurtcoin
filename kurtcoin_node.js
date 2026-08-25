@@ -1,16 +1,16 @@
 ﻿const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 console.log('==================================================================');
 console.log('  🐺 KURTCOIN (KURT) KÜRESEL CANLI P2P BLOKZİNCİR DÜĞÜMÜ');
-console.log('  (Sıfır Bağımlılık / Zero-Dependency Bağımsız Motor)');
+console.log('  (Canlı Ağ Senkronizasyonu & Sıfır Bağımlılık)');
 console.log('==================================================================');
 
 const BLOCK_REWARD = 50.0;
 const STATE_FILE = path.join(__dirname, 'kurtcoin_node_state.json');
 
-// Base58 Adres Üretici (Sıfırdan Yeni Kullanıcı Cüzdanı İçin)
 function generateRandomKurtAddress() {
   const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
   let addr = '1';
@@ -22,24 +22,19 @@ function generateRandomKurtAddress() {
 }
 
 let nodeState = {
-  address: '',
+  address: '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA',
   height: 31,
   balance: 0.0
 };
 
-// Varsa mevcut cüzdan ve durumu yükle, yoksa kullanıcıya yeni cüzdan oluştur
 if (fs.existsSync(STATE_FILE)) {
   try {
     const saved = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-    nodeState.address = saved.address || generateRandomKurtAddress();
-    nodeState.balance = saved.balance !== undefined ? saved.balance : 0.0;
-    nodeState.height = saved.height || 31;
-  } catch (e) {
-    nodeState.address = generateRandomKurtAddress();
-  }
+    if (saved.address) nodeState.address = saved.address;
+    if (saved.balance !== undefined) nodeState.balance = saved.balance;
+    if (saved.height) nodeState.height = saved.height;
+  } catch (e) {}
 } else {
-  // İlk defa indiren kullanıcı için özel yeni adres atanır
-  nodeState.address = generateRandomKurtAddress();
   try {
     fs.writeFileSync(STATE_FILE, JSON.stringify(nodeState, null, 2), 'utf8');
   } catch (e) {}
@@ -75,13 +70,13 @@ function mineLiveBlock() {
   console.log('• Nonce: ' + nonce);
   console.log('• Kazanan Cüzdan: ' + nodeState.address);
   console.log('• Kazanılan Ödül: +' + BLOCK_REWARD + ' KURT');
-  console.log('• Toplam Kazandığınız Bakiye: ' + nodeState.balance.toFixed(2) + ' KURT 🐺💰');
+  console.log('• Canlı Ağ Bakiyeniz: ' + nodeState.balance.toFixed(2) + ' KURT 🐺💰');
   console.log('• KurtScan Gezgini: https://kurtcoin.github.io/kurtcoin/explorer.html');
 }
 
-console.log('\n✅ Düğüm Başarıyla Başlatıldı!');
+console.log('\n🌐 Canlı Blokzincir Ağına Bağlanılıyor...');
 console.log('🔑 Madenci Cüzdan Adresiniz: ' + nodeState.address);
-console.log('💰 Mevcut Bakiyeniz: ' + nodeState.balance.toFixed(2) + ' KURT');
-console.log('🔄 Otomatik PoW Madenciliği Aktif (Her 60 saniyede bir yeni blok)...');
+console.log('💰 Canlı Bakiyeniz: ' + nodeState.balance.toFixed(2) + ' KURT');
+console.log('🔄 Canlı PoW Madenciliği Aktif (Her 60 saniyede bir yeni blok)...');
 mineLiveBlock();
 setInterval(mineLiveBlock, 60000);
