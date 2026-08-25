@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <style>
     :root {
       --bg-dark: #070b14;
@@ -242,7 +243,11 @@
   </div>
 
   <script>
-    const p2pChannel = new BroadcastChannel('kurtcoin_p2p_live_mesh');
+    const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+      clientId: 'kurt_scan_' + Math.random().toString(16).substr(2, 8),
+      keepalive: 60
+    });
+    const TOPIC_MAIN = 'kurtcoin/live/mainnet';
 
     let blocks = [
       { height: 2, hash: "0000021ddab423d6ea0790f8f86e9e8c6a00fbd322dad7d8e115c8c8700a42c2", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
@@ -252,46 +257,51 @@
 
     let txs = [];
 
+    function handleIncomingData(data) {
+      if (!data) return;
+      if (data.type === 'MINING') {
+        if (!blocks.some(b => b.hash === data.hash)) {
+          blocks.unshift({
+            height: data.height,
+            hash: data.hash,
+            miner: data.miner,
+            reward: "50 KURT",
+            time: "Az önce"
+          });
+          document.getElementById('statBlockHeight').innerText = data.height;
+          try { localStorage.setItem('kurtcoin_global_blocks', JSON.stringify(blocks)); } catch(e){}
+          renderBlocks();
+        }
+      } else if (data.type === 'TRANSFER') {
+        if (!txs.some(t => t.hash === data.hash)) {
+          txs.unshift(data);
+          try { localStorage.setItem('kurtcoin_global_txs', JSON.stringify(txs)); } catch(e){}
+          renderTxs();
+        }
+      }
+    }
+
     function init() {
-      // Geçmiş transferleri LocalStorage'dan da yükle
       try {
         const savedTxs = localStorage.getItem('kurtcoin_global_txs');
-        if (savedTxs) {
-          txs = JSON.parse(savedTxs);
-        }
+        if (savedTxs) txs = JSON.parse(savedTxs);
         const savedBlocks = localStorage.getItem('kurtcoin_global_blocks');
-        if (savedBlocks) {
-          blocks = JSON.parse(savedBlocks);
-        }
+        if (savedBlocks) blocks = JSON.parse(savedBlocks);
       } catch (e) {}
 
       renderBlocks();
       renderTxs();
 
-      p2pChannel.onmessage = (e) => {
-        const data = e.data;
-        if (!data) return;
-        if (data.type === 'MINING') {
-          if (!blocks.some(b => b.hash === data.hash)) {
-            blocks.unshift({
-              height: data.height,
-              hash: data.hash,
-              miner: data.miner,
-              reward: "50 KURT",
-              time: "Az önce"
-            });
-            document.getElementById('statBlockHeight').innerText = data.height;
-            try { localStorage.setItem('kurtcoin_global_blocks', JSON.stringify(blocks)); } catch(e){}
-            renderBlocks();
-          }
-        } else if (data.type === 'TRANSFER') {
-          if (!txs.some(t => t.hash === data.hash)) {
-            txs.unshift(data);
-            try { localStorage.setItem('kurtcoin_global_txs', JSON.stringify(txs)); } catch(e){}
-            renderTxs();
-          }
-        }
-      };
+      mqttClient.on('connect', () => {
+        mqttClient.subscribe(TOPIC_MAIN);
+      });
+
+      mqttClient.on('message', (topic, message) => {
+        try {
+          const data = JSON.parse(message.toString());
+          handleIncomingData(data);
+        } catch(e) {}
+      });
     }
 
     function renderBlocks() {

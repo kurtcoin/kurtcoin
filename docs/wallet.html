@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Küresel Cihazlar Arası Canlı P2P Ağı (WebSocket MQTT Mesh) -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <style>
     :root {
       --bg-main: #060913;
@@ -499,8 +501,13 @@
   </div>
 
   <script>
-    // Kurtcoin Kesintisiz ve Sıfır Hatalı Canlı P2P Blokzincir Ağı
-    const p2pChannel = new BroadcastChannel('kurtcoin_p2p_live_mesh');
+    // Küresel Canlı MQTT P2P Relay Ağı (Farklı Cihazlar ve Ağlar Arası)
+    const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+      clientId: 'kurt_node_' + Math.random().toString(16).substr(2, 8),
+      keepalive: 60
+    });
+
+    const TOPIC_MAIN = 'kurtcoin/live/mainnet';
 
     let wallet = null;
     let isMining = false;
@@ -519,27 +526,43 @@
       return res;
     }
 
-    function init() {
-      // P2P Canlı Eşler Arası İletişim Dinleyicisi
-      p2pChannel.onmessage = (event) => {
-        const data = event.data;
-        if (!data || !data.hash) return;
-        if (!globalFeed.some(f => f.hash === data.hash)) {
-          globalFeed.unshift(data);
-          if (data.height && data.height > globalHeight) globalHeight = data.height;
-          document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
+    function broadcastP2P(data) {
+      if (mqttClient && mqttClient.connected) {
+        mqttClient.publish(TOPIC_MAIN, JSON.stringify(data));
+      }
+    }
 
-          // Eğer işlem bize gelen bir transfer ise bakiyemizi artır
-          if (wallet && data.type === 'TRANSFER' && data.to.trim() === wallet.address.trim()) {
-            const receivedAmount = parseFloat(data.rawAmount || data.amount);
-            wallet.balance += receivedAmount;
-            saveWallet();
-            updateUI();
-            alert(`🎉 YENİ TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza başarıyla geçti.`);
-          }
-          renderFeed();
+    function handleIncomingData(data) {
+      if (!data || !data.hash) return;
+      if (!globalFeed.some(f => f.hash === data.hash)) {
+        globalFeed.unshift(data);
+        if (data.height && data.height > globalHeight) globalHeight = data.height;
+        const heightEl = document.getElementById('globalBlockHeightDisplay');
+        if (heightEl) heightEl.innerText = globalHeight;
+
+        // Bize gelen transfer varsa bakiyeyi artır
+        if (wallet && data.type === 'TRANSFER' && data.to && data.to.trim() === wallet.address.trim()) {
+          const receivedAmount = parseFloat(data.rawAmount || data.amount);
+          wallet.balance += receivedAmount;
+          saveWallet();
+          updateUI();
+          alert(`🎉 YENİ CANLI TRANSFER ALINDI!\n+${receivedAmount.toFixed(2)} KURT cüzdanınıza geçti.`);
         }
-      };
+        renderFeed();
+      }
+    }
+
+    function init() {
+      mqttClient.on('connect', () => {
+        mqttClient.subscribe(TOPIC_MAIN);
+      });
+
+      mqttClient.on('message', (topic, message) => {
+        try {
+          const data = JSON.parse(message.toString());
+          handleIncomingData(data);
+        } catch(e) {}
+      });
 
       const saved = localStorage.getItem('kurtcoin_user_wallet');
       if (saved) {
@@ -688,9 +711,8 @@
               miner: wallet.address,
               hash: h2
             };
-            p2pChannel.postMessage(blockData);
-            globalFeed.unshift(blockData);
-            renderFeed();
+            broadcastP2P(blockData);
+            handleIncomingData(blockData);
 
             document.getElementById('blocksFoundDisplay').innerText = myBlocksFound;
             document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
@@ -725,9 +747,8 @@
         to: to,
         hash: 'tx_' + Math.random().toString(36).substring(2, 15)
       };
-      p2pChannel.postMessage(txData);
-      globalFeed.unshift(txData);
-      renderFeed();
+      broadcastP2P(txData);
+      handleIncomingData(txData);
 
       closeModal('sendModal');
       alert('P2P Transferi başarıyla gönderildi!');
