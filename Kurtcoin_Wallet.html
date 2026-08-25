@@ -468,9 +468,9 @@
 
       <!-- Action Grid -->
       <div class="action-grid">
-        <div class="action-btn" onclick="openModal('sendModal')">📤 Gönder</div>
-        <div class="action-btn" onclick="openModal('receiveModal')">📥 Bakiye Al</div>
-        <div class="action-btn" onclick="openModal('backupModal')">🔑 Gizli Anahtarım</div>
+        <div class="action-btn" onclick="openModal('sendModal')" data-i18n="action_send">📤 Gönder</div>
+        <div class="action-btn" onclick="openModal('receiveModal')" data-i18n="action_receive">📥 Bakiye Al</div>
+        <div class="action-btn" onclick="openModal('backupModal')" data-i18n="action_backup">🔑 Gizli Anahtarım</div>
       </div>
 
       <!-- Feed -->
@@ -486,22 +486,22 @@
     <!-- Mobile Bottom Bar -->
     <div class="mobile-nav">
       <div class="mobile-nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <span>📊</span>Panel
+        <span>📊</span><span data-i18n="mob_panel">Panel</span>
       </div>
       <div class="mobile-nav-item" onclick="openModal('sendModal')">
-        <span>📤</span>Gönder
+        <span>📤</span><span data-i18n="mob_send">Gönder</span>
       </div>
       <div class="mobile-nav-item" onclick="openModal('receiveModal')">
-        <span>📥</span>Al
+        <span>📥</span><span data-i18n="mob_receive">Al</span>
       </div>
       <div class="mobile-nav-item" onclick="toggleWebMiner()">
-        <span>⛏️</span>Kazım
+        <span>⛏️</span><span data-i18n="mob_mine">Kazım</span>
       </div>
       <div class="mobile-nav-item" onclick="openModal('backupModal')">
-        <span>🔑</span>Anahtar
+        <span>🔑</span><span data-i18n="mob_key">Anahtar</span>
       </div>
       <div class="mobile-nav-item" onclick="logoutWallet()" style="color: #ef4444;">
-        <span>🚪</span>Çıkış
+        <span>🚪</span><span data-i18n="mob_logout">Çıkış</span>
       </div>
     </div>
   </div>
@@ -509,56 +509,56 @@
   <!-- Modals -->
   <div class="modal" id="sendModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;">📤 Canlı P2P Transfer</h2>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;" data-i18n="modal_send_title">📤 Canlı P2P Transfer</h2>
       <div class="input-group">
-        <label>Alıcı Kurtcoin Adresi:</label>
-        <input type="text" id="sendAddressInput" placeholder="Örn: 14FTsfBTzSBP...">
+        <label data-i18n="modal_send_addr_label">Alıcı Kurtcoin Adresi:</label>
+        <input type="text" id="sendAddressInput" placeholder="Örn: 14FTsfBTzSBP..." data-i18n="modal_send_addr_ph">
       </div>
       <div class="input-group">
-        <label>Miktar (KURT):</label>
+        <label data-i18n="modal_send_amt_label">Miktar (KURT):</label>
         <input type="number" id="sendAmountInput" placeholder="0.00">
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button class="auth-btn btn-create" style="margin: 0;" onclick="executeP2PSend()">Gönder</button>
-        <button class="auth-btn btn-import" style="margin: 0; width: auto;" onclick="closeModal('sendModal')">Kapat</button>
+        <button class="auth-btn btn-create" style="margin: 0;" onclick="executeP2PSend()" data-i18n="modal_send_btn">Gönder</button>
+        <button class="auth-btn btn-import" style="margin: 0; width: auto;" onclick="closeModal('sendModal')" data-i18n="modal_close">Kapat</button>
       </div>
     </div>
   </div>
 
   <div class="modal" id="receiveModal">
     <div class="modal-card" style="text-align: center;">
-      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;">📥 Bakiye Alma Adresiniz</h2>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;" data-i18n="modal_receive_title">📥 Bakiye Alma Adresiniz</h2>
       <div style="background: #fff; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 14px;">
         <img id="qrImage" src="" alt="QR" style="width: 160px; height: 160px;">
       </div>
       <p id="receiveAddressText" style="font-family: monospace; font-size: 0.8rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 16px;"></p>
-      <button class="auth-btn btn-create" onclick="copyMyAddress()">Adresi Kopyala</button>
-      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('receiveModal')">Kapat</button>
+      <button class="auth-btn btn-create" onclick="copyMyAddress()" data-i18n="modal_copy_addr_btn">Adresi Kopyala</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('receiveModal')" data-i18n="modal_close">Kapat</button>
     </div>
   </div>
 
   <div class="modal" id="backupModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;">🔒 Özel Anahtarınız</h2>
-      <p style="color: #ef4444; font-size: 0.8rem; margin-bottom: 14px;">⚠️ UYARI: Bu anahtarı kimseyle paylaşmayın!</p>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 14px;" data-i18n="modal_backup_title">🔒 Özel Anahtarınız</h2>
+      <p style="color: #ef4444; font-size: 0.8rem; margin-bottom: 14px;" data-i18n="modal_backup_warn">⚠️ UYARI: Bu anahtarı kimseyle paylaşmayın!</p>
       <div class="input-group">
         <label>WIF Private Key:</label>
         <textarea id="privateKeyText" rows="3" readonly style="font-family: monospace; font-size: 0.8rem;"></textarea>
       </div>
-      <button class="auth-btn btn-create" onclick="copyPrivateKey()">Kopyala</button>
-      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('backupModal')">Kapat</button>
+      <button class="auth-btn btn-create" onclick="copyPrivateKey()" data-i18n="modal_copy_key_btn">Kopyala</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('backupModal')" data-i18n="modal_close">Kapat</button>
     </div>
   </div>
 
   <div class="modal" id="importModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;">🔑 Cüzdan İçe Aktar</h2>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.3rem; margin-bottom: 16px;" data-i18n="modal_import_title">🔑 Cüzdan İçe Aktar</h2>
       <div class="input-group">
-        <label>Özel Anahtarınızı (WIF) Yapıştırın:</label>
-        <input type="text" id="importKeyInput" placeholder="Örn: Kx85UkARHT41...">
+        <label data-i18n="modal_import_key_label">Özel Anahtarınızı (WIF) Yapıştırın:</label>
+        <input type="text" id="importKeyInput" placeholder="Örn: Kx85UkARHT41..." data-i18n="modal_import_key_ph">
       </div>
-      <button class="auth-btn btn-create" onclick="executeImport()">Cüzdanı Aç</button>
-      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('importModal')">İptal</button>
+      <button class="auth-btn btn-create" onclick="executeImport()" data-i18n="modal_open_wallet_btn">Cüzdanı Aç</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('importModal')" data-i18n="modal_cancel">İptal</button>
     </div>
   </div>
 

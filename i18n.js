@@ -1,6 +1,7 @@
-﻿// Kurtcoin i18n Translation Engine
+﻿// Kurtcoin Comprehensive i18n Translation Engine
 const KURT_TRANSLATIONS = {
   tr: {
+    // Nav & Common
     nav_about: "Hakkında",
     nav_specs: "Özellikler",
     nav_explorer: "KurtScan Gezgini",
@@ -9,6 +10,7 @@ const KURT_TRANSLATIONS = {
     nav_wallet_enter: "⚡ Cüzdana Giriş",
     nav_home: "Ana Sayfa",
 
+    // Index Hero
     hero_badge: "🔥 KATMAN-1 BLOKZİNCİR",
     hero_title: "THE WOLFPACK AWAKENS",
     hero_desc: "Kurtcoin (KURT), Bitcoin mimarisi üzerine kurulu, 10 kat daha hızlı blok onay süreleri ve 100 Milyonluk adil arzı ile topluluk gücünü merkeze alan yeni nesil bağımsız bir kripto para protokolüdür.",
@@ -16,6 +18,7 @@ const KURT_TRANSLATIONS = {
     btn_download_node: "📦 Düğüm İndir (Release)",
     btn_read_whitepaper: "Whitepaper Oku",
 
+    // Specs
     specs_title: "🐺 TEKNİK ÖZELLİKLER",
     spec_supply_label: "Toplam Arz",
     spec_supply_val: "100.000.000",
@@ -31,6 +34,7 @@ const KURT_TRANSLATIONS = {
     spec_consensus_desc: "Madencilikle güvenceye alınan sağlam kriptografik ağ.",
     footer_text: "© 2026 Kurtcoin (KURT) Network. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.",
 
+    // Wallet UI & Actions
     wallet_title: "KURTCOIN CÜZDAN",
     wallet_desc: "Kurtcoin Katman-1 Mobil & Web Cüzdanı. Tarayıcınız doğrudan küresel P2P ağına bağlanır.",
     btn_new_wallet: "✨ Yeni Cüzdan Oluştur",
@@ -41,6 +45,7 @@ const KURT_TRANSLATIONS = {
     sidebar_backup: "🔒 Anahtar Yedekle",
     sidebar_explorer: "🔍 KurtScan Gezgini",
     sidebar_logout: "🚪 Cüzdandan Çık",
+    topbar_title: "Cüzdan & Madenci",
     label_avail_balance: "Kullanılabilir Bakiye",
     label_live_p2p: "⚡ Canlı P2P Blokzincir",
     btn_receive_qr: "📥 Bakiye Al (QR)",
@@ -52,9 +57,42 @@ const KURT_TRANSLATIONS = {
     miner_found_blocks: "Kazdığınız",
     btn_start_miner: "▶️ Madenciliği Başlat",
     btn_stop_miner: "⏹️ Durdur",
+    action_send: "📤 Gönder",
+    action_receive: "📥 Bakiye Al",
+    action_backup: "🔑 Gizli Anahtarım",
     feed_title: "🌐 Küresel Canlı Blok Akışı",
     feed_synced: "● Canlı Senkron",
 
+    // Wallet Mobile Bottom Nav
+    mob_panel: "Panel",
+    mob_send: "Gönder",
+    mob_receive: "Al",
+    mob_mine: "Kazım",
+    mob_key: "Anahtar",
+    mob_logout: "Çıkış",
+
+    // Modals
+    modal_send_title: "📤 Canlı P2P Transfer",
+    modal_send_addr_label: "Alıcı Kurtcoin Adresi:",
+    modal_send_addr_ph: "Örn: 14FTsfBTzSBP...",
+    modal_send_amt_label: "Miktar (KURT):",
+    modal_send_btn: "Gönder",
+    modal_close: "Kapat",
+    modal_cancel: "İptal",
+
+    modal_receive_title: "📥 Bakiye Alma Adresiniz",
+    modal_copy_addr_btn: "Adresi Kopyala",
+
+    modal_backup_title: "🔒 Özel Anahtarınız",
+    modal_backup_warn: "⚠️ UYARI: Bu anahtarı kimseyle paylaşmayın!",
+    modal_copy_key_btn: "Kopyala",
+
+    modal_import_title: "🔑 Cüzdan İçe Aktar",
+    modal_import_key_label: "Özel Anahtarınızı (WIF) Yapıştırın:",
+    modal_import_key_ph: "Örn: Kx85UkARHT41...",
+    modal_open_wallet_btn: "Cüzdanı Aç",
+
+    // Explorer
     exp_hero_title: "KURTCOIN BLOK GEZGİNİ",
     exp_hero_desc: "Kurtcoin Katman-1 Blokzincirindeki tüm blokları, adresleri ve canlı işlemleri gerçek zamanlı keşfedin.",
     exp_search_placeholder: "Kurtcoin Adresi (1...), Blok # veya İşlem (Tx) Hash yapıştırın...",
@@ -68,9 +106,11 @@ const KURT_TRANSLATIONS = {
     exp_stat_live: "● CANLI AĞ",
     exp_blocks_title: "📦 Son Kazılan Bloklar",
     exp_txs_title: "💸 Son Canlı Transferler",
-    exp_modal_close: "Pencereyi Kapat"
+    exp_modal_close: "Pencereyi Kapat",
+    exp_no_txs: "Henüz yeni transfer işlemi bulunmuyor."
   },
   en: {
+    // Nav & Common
     nav_about: "About",
     nav_specs: "Features",
     nav_explorer: "KurtScan Explorer",
@@ -79,6 +119,7 @@ const KURT_TRANSLATIONS = {
     nav_wallet_enter: "⚡ Launch Wallet",
     nav_home: "Home",
 
+    // Index Hero
     hero_badge: "🔥 LAYER-1 BLOCKCHAIN",
     hero_title: "THE WOLFPACK AWAKENS",
     hero_desc: "Kurtcoin (KURT) is a next-generation independent cryptocurrency protocol built on Bitcoin's proven security, offering 10x faster block confirmation times and a fair 100M supply centered around community power.",
@@ -86,6 +127,7 @@ const KURT_TRANSLATIONS = {
     btn_download_node: "📦 Download Node (Release)",
     btn_read_whitepaper: "Read Whitepaper",
 
+    // Specs
     specs_title: "🐺 TECHNICAL SPECIFICATIONS",
     spec_supply_label: "Total Supply",
     spec_supply_val: "100,000,000",
@@ -101,6 +143,7 @@ const KURT_TRANSLATIONS = {
     spec_consensus_desc: "Robust cryptographic network secured by proof-of-work.",
     footer_text: "© 2026 Kurtcoin (KURT) Network. Released as open source under the MIT License.",
 
+    // Wallet UI & Actions
     wallet_title: "KURTCOIN WALLET",
     wallet_desc: "Kurtcoin Layer-1 Mobile & Web Wallet. Your browser connects directly to the global P2P mesh network.",
     btn_new_wallet: "✨ Create New Wallet",
@@ -111,6 +154,7 @@ const KURT_TRANSLATIONS = {
     sidebar_backup: "🔒 Backup Key",
     sidebar_explorer: "🔍 KurtScan Explorer",
     sidebar_logout: "🚪 Log Out",
+    topbar_title: "Wallet & Miner",
     label_avail_balance: "Available Balance",
     label_live_p2p: "⚡ Live P2P Blockchain",
     btn_receive_qr: "📥 Receive (QR)",
@@ -122,9 +166,42 @@ const KURT_TRANSLATIONS = {
     miner_found_blocks: "Mined by You",
     btn_start_miner: "▶️ Start Mining",
     btn_stop_miner: "⏹️ Stop",
+    action_send: "📤 Send",
+    action_receive: "📥 Receive",
+    action_backup: "🔑 My Private Key",
     feed_title: "🌐 Global Live Block Feed",
     feed_synced: "● Live Synced",
 
+    // Wallet Mobile Bottom Nav
+    mob_panel: "Dashboard",
+    mob_send: "Send",
+    mob_receive: "Receive",
+    mob_mine: "Mining",
+    mob_key: "Key",
+    mob_logout: "Logout",
+
+    // Modals
+    modal_send_title: "📤 Live P2P Transfer",
+    modal_send_addr_label: "Recipient Kurtcoin Address:",
+    modal_send_addr_ph: "e.g. 14FTsfBTzSBP...",
+    modal_send_amt_label: "Amount (KURT):",
+    modal_send_btn: "Send",
+    modal_close: "Close",
+    modal_cancel: "Cancel",
+
+    modal_receive_title: "📥 Your Receiving Address",
+    modal_copy_addr_btn: "Copy Address",
+
+    modal_backup_title: "🔒 Your Private Key",
+    modal_backup_warn: "⚠️ WARNING: Never share this key with anyone!",
+    modal_copy_key_btn: "Copy Key",
+
+    modal_import_title: "🔑 Import Wallet",
+    modal_import_key_label: "Paste Your Private Key (WIF):",
+    modal_import_key_ph: "e.g. Kx85UkARHT41...",
+    modal_open_wallet_btn: "Unlock Wallet",
+
+    // Explorer
     exp_hero_title: "KURTCOIN BLOCK EXPLORER",
     exp_hero_desc: "Explore all blocks, addresses, and live transactions on the Kurtcoin Layer-1 blockchain in real time.",
     exp_search_placeholder: "Paste Kurtcoin Address (1...), Block # or Tx Hash...",
@@ -138,7 +215,8 @@ const KURT_TRANSLATIONS = {
     exp_stat_live: "● LIVE MAINNET",
     exp_blocks_title: "📦 Latest Mined Blocks",
     exp_txs_title: "💸 Latest Live Transfers",
-    exp_modal_close: "Close Window"
+    exp_modal_close: "Close Window",
+    exp_no_txs: "No recent live transactions yet."
   }
 };
 
@@ -156,8 +234,9 @@ function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('kurtcoin_user_lang', lang);
   applyTranslations();
-  const langBtn = document.getElementById('langToggleBtn');
-  if (langBtn) langBtn.innerText = currentLang === 'tr' ? '🇹🇷 TR' : '🇬🇧 EN';
+  document.querySelectorAll('[id^="langToggleBtn"]').forEach(btn => {
+    btn.innerText = currentLang === 'tr' ? '🇹🇷 TR' : '🇬🇧 EN';
+  });
 }
 
 function toggleLanguage() {
