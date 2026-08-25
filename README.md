@@ -48,11 +48,19 @@
 
 ### Quick Build (Linux/macOS):
 ```bash
-git clone https://github.com/your-username/kurtcoin.git
+git clone https://github.com/kurtcoin/kurtcoin.git
 cd kurtcoin
 cmake -B build
 cmake --build build
 ```
+
+---
+
+## 🌐 Official Web Portal & Live Explorer
+
+* **Official Website:** [https://kurtcoin.github.io/kurtcoin/](https://kurtcoin.github.io/kurtcoin/)
+* **Web Wallet & Browser Miner:** [https://kurtcoin.github.io/kurtcoin/wallet.html](https://kurtcoin.github.io/kurtcoin/wallet.html)
+* **KurtScan Block Explorer:** [https://kurtcoin.github.io/kurtcoin/explorer.html](https://kurtcoin.github.io/kurtcoin/explorer.html)
 
 ---
 
