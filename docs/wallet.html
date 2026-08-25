@@ -600,12 +600,22 @@
       globalFeed.slice(0, 10).forEach(t => {
         const item = document.createElement('div');
         item.className = 'tx-item';
+        
+        let subText = t.date;
+        let isMine = false;
+        if (t.type === 'MINING') {
+          isMine = wallet && t.miner === wallet.address;
+          subText = `${t.date} • Madenci: ${t.miner.substring(0, 6)}...${t.miner.substring(t.miner.length - 4)} ${isMine ? '<b>(Siz)</b>' : ''}`;
+        } else if (t.type === 'TRANSFER') {
+          subText = `${t.date} • ${t.from.substring(0, 4)}.. ➔ ${t.to.substring(0, 4)}..`;
+        }
+
         item.innerHTML = `
           <div class="tx-info">
             <div class="tx-icon" style="${t.type === 'TRANSFER' ? 'background: rgba(0, 242, 254, 0.1); color: var(--neon-cyan);' : ''}">${t.type === 'TRANSFER' ? '💸' : '⛏️'}</div>
             <div style="min-width: 0;">
               <div style="font-weight: 700; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.title}</div>
-              <div style="color: var(--text-muted); font-size: 0.75rem;">${t.date}</div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">${subText}</div>
             </div>
           </div>
           <div style="font-family: 'Orbitron'; font-weight: 700; font-size: 0.9rem; color: ${t.type === 'TRANSFER' ? 'var(--neon-cyan)' : '#10b981'}; white-space: nowrap;">
