@@ -255,7 +255,32 @@
       { height: 0, hash: "00000ad4b509810ffa3bb36aa5071e885a34ca424d94820b44bb0c3d589364dc", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT (Genesis)", time: "Genesis 2026" }
     ];
 
-    let txs = [];
+    let txs = [
+      {
+        hash: "tx_genesis_founding_allocation",
+        from: "Genesis Block Mint",
+        to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
+        amount: "50.00 KURT",
+        date: "Genesis",
+        type: "TRANSFER"
+      },
+      {
+        hash: "tx_block1_mining_reward",
+        from: "PoW Miner Node #1",
+        to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
+        amount: "50.00 KURT",
+        date: "Bugün",
+        type: "TRANSFER"
+      },
+      {
+        hash: "tx_block2_mining_reward",
+        from: "PoW Miner Node #2",
+        to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
+        amount: "50.00 KURT",
+        date: "Bugün",
+        type: "TRANSFER"
+      }
+    ];
 
     function handleIncomingData(data) {
       if (!data) return;
