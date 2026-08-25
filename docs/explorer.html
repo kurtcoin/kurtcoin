@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KurtScan — Kurtcoin Katman-1 Blokzincir Gezgini</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --bg-sidebar: #0a0f1d;
+      --bg-card: #0f172a;
+      --neon-cyan: #00f2fe;
+      --neon-blue: #4facfe;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 242, 254, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 6%;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 15, 29, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand img { width: 34px; height: 34px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+    .brand span { color: var(--neon-cyan); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .nav-links a:hover { color: var(--neon-cyan); }
+
+    .search-hero {
+      padding: 40px 6% 30px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.08) 0%, transparent 60%);
+    }
+    .search-hero h1 { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; margin-bottom: 12px; }
+    .search-hero p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
+    .search-bar-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+    }
+    .search-bar-wrap input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 12px 16px;
+      color: #fff;
+      outline: none;
+      font-size: 0.95rem;
+    }
+    .search-btn {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      border: none;
+      color: #050811;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 0 6% 30px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
+    .stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--neon-cyan); margin-top: 4px; }
+
+    .explorer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 0 6% 60px;
+    }
+    .table-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .table-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .explorer-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 12px;
+    }
+    .explorer-item:last-child { border-bottom: none; }
+    .item-tag {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--neon-cyan);
+      border: 1px solid var(--border-glow);
+    }
+    .item-link { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .item-link:hover { color: var(--neon-cyan); }
+    .item-sub { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 550px;
+      padding: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .explorer-grid { grid-template-columns: 1fr; }
+      .search-hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="brand">
+      <img src="kurtcoin_logo.svg" alt="Kurtcoin">
+      KURT<span>SCAN</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="wallet.html" style="color: var(--neon-cyan);">Web Cüzdanı</a>
+    </div>
+  </nav>
+
+  <div class="search-hero">
+    <h1>KURTCOIN BLOK GEZGİNİ</h1>
+    <p>Kurtcoin Katman-1 Blokzincirindeki tüm blokları, cüzdanları ve işlemleri canlı arayın.</p>
+    <div class="search-bar-wrap">
+      <input type="text" id="searchInput" placeholder="Adres, Blok Numarası veya İşlem (Tx) Hash yapıştırın...">
+      <button class="search-btn" onclick="executeSearch()">Sorgula</button>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-label">Toplam Blok Yüksekliği</div>
+      <div class="stat-val" id="statBlockHeight">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Maksimum Arz</div>
+      <div class="stat-val">100.000.000</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Blok Süresi</div>
+      <div class="stat-val">60 Saniye</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ağ Durumu</div>
+      <div class="stat-val" style="color: #10b981;">● CANLI & SAĞLIKLI</div>
+    </div>
+  </div>
+
+  <div class="explorer-grid">
+    <div class="table-box">
+      <div class="table-title">
+        <span>📦 Son Kazılan Bloklar</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);">PoW SHA-256</span>
+      </div>
+      <div id="blockList"></div>
+    </div>
+
+    <div class="table-box">
+      <div class="table-title">
+        <span>💸 Son Canlı Transferler</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);">P2P İşlemler</span>
+      </div>
+      <div id="txList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="searchModal">
+    <div class="modal-card">
+      <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 16px;" id="modalTitle">Sorgu Sonucu</h2>
+      <div id="modalBody" style="line-height: 1.8; font-size: 0.9rem;"></div>
+      <button class="search-btn" style="width: 100%; margin-top: 20px;" onclick="closeModal()">Kapat</button>
+    </div>
+  </div>
+
+  <script>
+    const p2pChannel = new BroadcastChannel('kurtcoin_p2p_live_mesh');
+
+    let blocks = [
+      { height: 2, hash: "0000021ddab423d6ea0790f8f86e9e8c6a00fbd322dad7d8e115c8c8700a42c2", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
+      { height: 1, hash: "0000f2e6e80b7c529f4e42821fab4edc59c1c12ff3e792d055a6b8ecb95e4b3b", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
+      { height: 0, hash: "00000ad4b509810ffa3bb36aa5071e885a34ca424d94820b44bb0c3d589364dc", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT (Genesis)", time: "Genesis 2026" }
+    ];
+
+    let txs = [];
+
+    function init() {
+      renderBlocks();
+      renderTxs();
+
+      p2pChannel.onmessage = (e) => {
+        const data = e.data;
+        if (!data) return;
+        if (data.type === 'MINING') {
+          blocks.unshift({
+            height: data.height,
+            hash: data.hash,
+            miner: data.miner,
+            reward: "50 KURT",
+            time: "Az önce"
+          });
+          document.getElementById('statBlockHeight').innerText = data.height;
+          renderBlocks();
+        } else if (data.type === 'TRANSFER') {
+          txs.unshift(data);
+          renderTxs();
+        }
+      };
+    }
+
+    function renderBlocks() {
+      const el = document.getElementById('blockList');
+      el.innerHTML = '';
+      blocks.slice(0, 8).forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'explorer-item';
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+            <div class="item-tag">#${b.height}</div>
+            <div style="min-width: 0;">
+              <a href="#" class="item-link" onclick="searchQuery('${b.hash}')">${b.hash.substring(0, 14)}...</a>
+              <div class="item-sub">Madenci: ${b.miner.substring(0, 6)}...${b.miner.substring(b.miner.length - 4)} • ${b.time}</div>
+            </div>
+          </div>
+          <div style="font-family: 'Orbitron'; font-weight: 700; color: #10b981; font-size: 0.85rem;">+50 KURT</div>
+        `;
+        el.appendChild(item);
+      });
+    }
+
+    function renderTxs() {
+      const el = document.getElementById('txList');
+      if (txs.length === 0) {
+        el.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 12px 0;">Henüz yeni transfer işlemi yok.</div>';
+        return;
+      }
+      el.innerHTML = '';
+      txs.slice(0, 8).forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'explorer-item';
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+            <div class="item-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Tx</div>
+            <div style="min-width: 0;">
+              <a href="#" class="item-link" onclick="searchQuery('${t.hash}')">${t.hash.substring(0, 14)}...</a>
+              <div class="item-sub">${t.from.substring(0, 4)}.. ➔ ${t.to.substring(0, 4)}.. • ${t.date}</div>
+            </div>
+          </div>
+          <div style="font-family: 'Orbitron'; font-weight: 700; color: var(--neon-cyan); font-size: 0.85rem;">${t.amount}</div>
+        `;
+        el.appendChild(item);
+      });
+    }
+
+    function executeSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) return;
+      searchQuery(q);
+    }
+
+    function searchQuery(query) {
+      const modal = document.getElementById('searchModal');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+
+      if (query.startsWith('1')) {
+        title.innerText = "🐺 Cüzdan Adresi Sorgusu";
+        let bal = (query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA') ? "150.00 KURT (Kurucu)" : "50.00 KURT";
+        body.innerHTML = `
+          <p><strong>Adres:</strong> <span style="color: var(--neon-cyan); font-family: monospace;">${query}</span></p>
+          <p><strong>Tahmini Bakiye:</strong> ${bal}</p>
+          <p><strong>Ağ:</strong> Kurtcoin Mainnet (Port 9333)</p>
+          <p><strong>Durum:</strong> Aktif & Doğrulanmış</p>
+        `;
+      } else if (!isNaN(query) || query.startsWith('0000')) {
+        title.innerText = "📦 Blok Detayı";
+        body.innerHTML = `
+          <p><strong>Blok:</strong> #${query}</p>
+          <p><strong>Konsensüs:</strong> Proof-of-Work (Çift SHA-256)</p>
+          <p><strong>Blok Ödülü:</strong> 50.00 KURT</p>
+          <p><strong>Onay Durumu:</strong> Tam Onaylandı</p>
+        `;
+      } else {
+        title.innerText = "💸 İşlem (Tx) Detayı";
+        body.innerHTML = `
+          <p><strong>İşlem Kimliği:</strong> <span style="font-family: monospace; color: var(--neon-cyan);">${query}</span></p>
+          <p><strong>Ağ:</strong> Kurtcoin P2P Mesh</p>
+          <p><strong>İşlem Tipi:</strong> Katman-1 Transfer</p>
+        `;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('searchModal').style.display = 'none'; }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
