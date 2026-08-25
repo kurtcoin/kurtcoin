@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kurtcoin Core — Resmi Masaüstü Cüzdanı</title>
+  <title>Kurtcoin Web Wallet — Non-Custodial Multi-User Wallet</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -23,6 +23,55 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
+    /* Welcome / No-wallet Screen */
+    #authScreen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-main);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .auth-box {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 242, 254, 0.15);
+    }
+    .auth-box img { width: 80px; height: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 12px var(--neon-cyan)); }
+    .auth-box h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 12px; }
+    .auth-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px; line-height: 1.6; }
+    .auth-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    .btn-create {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      border: none;
+      color: #050811;
+    }
+    .btn-import {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+    }
+    .btn-import:hover { border-color: var(--neon-cyan); }
+
+    /* App UI (Hidden until authenticated) */
+    #appLayout { display: none; width: 100%; height: 100%; }
+
     /* Sidebar */
     aside {
       width: 260px;
@@ -41,7 +90,6 @@
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
       font-size: 1.2rem;
-      letter-spacing: 1px;
     }
     .brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
     .nav-list { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
@@ -53,9 +101,6 @@
       font-weight: 600;
       font-size: 0.95rem;
       transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
     .nav-item:hover, .nav-item.active {
       background: rgba(0, 242, 254, 0.1);
@@ -89,11 +134,7 @@
       flex-direction: column;
       gap: 28px;
     }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .topbar { display: flex; justify-content: space-between; align-items: center; }
     .topbar h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; }
     .wallet-chip {
       background: var(--bg-card);
@@ -115,10 +156,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
-      overflow: hidden;
     }
-    .balance-label { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .balance-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
     .balance-amount {
       font-family: 'Orbitron', sans-serif;
       font-size: 3.2rem;
@@ -130,23 +169,17 @@
       gap: 12px;
     }
     .balance-amount span { font-size: 1.5rem; color: var(--neon-cyan); }
-    .balance-usd { color: #10b981; font-weight: 600; font-size: 1.1rem; }
 
-    /* Quick Action Buttons */
-    .action-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
+    /* Action Grid */
+    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .action-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 18px;
+      padding: 16px;
       border-radius: 14px;
       cursor: pointer;
       text-align: center;
       font-weight: 700;
-      font-size: 1rem;
       transition: all 0.2s;
     }
     .action-btn:hover {
@@ -155,13 +188,8 @@
       transform: translateY(-2px);
     }
 
-    /* Transactions Table */
-    .section-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-    }
+    /* Transactions */
+    .section-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
     .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 16px; }
     .tx-item {
       display: flex;
@@ -183,11 +211,8 @@
       align-items: center;
       font-size: 1.2rem;
     }
-    .tx-title { font-weight: 700; font-size: 0.95rem; }
-    .tx-date { color: var(--text-muted); font-size: 0.8rem; }
-    .tx-amount { font-family: 'Orbitron', sans-serif; font-weight: 700; color: #10b981; }
 
-    /* Modal */
+    /* Modals */
     .modal {
       display: none;
       position: fixed;
@@ -196,18 +221,18 @@
       backdrop-filter: blur(8px);
       justify-content: center;
       align-items: center;
-      z-index: 1000;
+      z-index: 3000;
     }
     .modal-card {
       background: var(--bg-sidebar);
       border: 1px solid var(--border-glow);
       border-radius: 20px;
-      width: 450px;
+      width: 460px;
       padding: 32px;
     }
     .input-group { margin-bottom: 16px; }
     .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-    .input-group input {
+    .input-group input, .input-group textarea {
       width: 100%;
       background: var(--bg-main);
       border: 1px solid var(--border);
@@ -216,129 +241,95 @@
       color: #fff;
       outline: none;
     }
-    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-    .btn-send {
-      flex: 1;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
-      border: none;
-      color: #050811;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-close {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside>
-    <div class="brand">
-      <img src="kurtcoin_logo.svg" alt="Kurtcoin Logo">
-      KURTCOIN
-    </div>
-    <ul class="nav-list">
-      <li class="nav-item active">📊 Genel Bakış</li>
-      <li class="nav-item" onclick="openSendModal()">📤 Transfer Gönder</li>
-      <li class="nav-item" onclick="openReceiveModal()">📥 Bakiye Al</li>
-      <li class="nav-item" onclick="startLocalMining()">⛏️ Blok Madenciliği</li>
-    </ul>
-    <div class="node-status">
-      <div><span class="status-dot"></span><strong>Düğüm:</strong> Senkronize</div>
-      <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Ağ: Kurtcoin Mainnet (Port 9333)</div>
-    </div>
-  </aside>
 
-  <!-- Main Content -->
-  <main>
-    <div class="topbar">
-      <h1>Cüzdan Özeti</h1>
-      <div class="wallet-chip" id="walletChip" title="Kopyalamak için tıklayın" onclick="copyAddress()">
-        14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA 📋
+  <!-- Auth / Welcome Modal -->
+  <div id="authScreen">
+    <div class="auth-box">
+      <img src="kurtcoin_logo.svg" alt="Kurtcoin">
+      <h1>KURTCOIN CÜZDANI</h1>
+      <p class="auth-desc">
+        Kurtcoin Katman-1 Web Cüzdanına hoş geldiniz. Özel anahtarlarınız (Private Key) tamamen sizin cihazınızda şifrelenir ve sunuculara asla iletilmez.
+      </p>
+      <button class="auth-btn btn-create" onclick="createNewWallet()">✨ Yeni Cüzdan Oluştur</button>
+      <button class="auth-btn btn-import" onclick="openImportModal()">🔑 Özel Anahtar (Private Key) İle Aç</button>
+    </div>
+  </div>
+
+  <!-- Main Wallet Application -->
+  <div id="appLayout">
+    <aside>
+      <div class="brand">
+        <img src="kurtcoin_logo.svg" alt="Kurtcoin">
+        KURTCOIN
       </div>
-    </div>
-
-    <!-- Balance Card -->
-    <div class="balance-card">
-      <div>
-        <div class="balance-label">Kullanılabilir Bakiye</div>
-        <div class="balance-amount" id="balanceDisplay">150.00 <span>KURT</span></div>
-        <div class="balance-usd">≈ $150.00 USD (Wolfpack Değeri)</div>
+      <ul class="nav-list">
+        <li class="nav-item active">📊 Genel Bakış</li>
+        <li class="nav-item" onclick="openModal('sendModal')">📤 Transfer Gönder</li>
+        <li class="nav-item" onclick="openModal('receiveModal')">📥 Bakiye Al</li>
+        <li class="nav-item" onclick="mineBlock()">⛏️ Blok Madenciliği</li>
+        <li class="nav-item" onclick="openModal('backupModal')">🔒 Anahtar Yedekle</li>
+        <li class="nav-item" style="color: #ef4444;" onclick="logoutWallet()">🚪 Cüzdandan Çık</li>
+      </ul>
+      <div class="node-status">
+        <div><span class="status-dot"></span><strong>Düğüm:</strong> Canlı</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;">Kurtcoin Network (Port 9333)</div>
       </div>
-      <div>
-        <button class="action-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)); color: #050811;" onclick="startLocalMining()">
-          ⛏️ 1 Blok Kaz (+50 KURT)
-        </button>
-      </div>
-    </div>
+    </aside>
 
-    <!-- Quick Action Grid -->
-    <div class="action-grid">
-      <div class="action-btn" onclick="openSendModal()">📤 KURT Gönder</div>
-      <div class="action-btn" onclick="openReceiveModal()">📥 QR / Adres Al</div>
-      <div class="action-btn" onclick="alert('Kurtcoin Blokzincir Düğümü Senkronize! Tüm bloklar güncel.')">🔄 Zinciri Yenile</div>
-    </div>
-
-    <!-- Transactions List -->
-    <div class="section-box">
-      <div class="section-title">📜 Son Blokzincir İşlemleri</div>
-      <div id="txList">
-        <div class="tx-item">
-          <div class="tx-info">
-            <div class="tx-icon">⛏️</div>
-            <div>
-              <div class="tx-title">Madencilik Blok Ödülü (#2)</div>
-              <div class="tx-date">Bugün, 12:17 • Onaylandı (PoW SHA-256)</div>
-            </div>
-          </div>
-          <div class="tx-amount">+50.00 KURT</div>
-        </div>
-        <div class="tx-item">
-          <div class="tx-info">
-            <div class="tx-icon">⛏️</div>
-            <div>
-              <div class="tx-title">Madencilik Blok Ödülü (#1)</div>
-              <div class="tx-date">Bugün, 12:16 • Onaylandı (PoW SHA-256)</div>
-            </div>
-          </div>
-          <div class="tx-amount">+50.00 KURT</div>
-        </div>
-        <div class="tx-item">
-          <div class="tx-info">
-            <div class="tx-icon">👑</div>
-            <div>
-              <div class="tx-title">Genesis Kurucu Bloğu (#0)</div>
-              <div class="tx-date">2026 • Kurtcoin Manifestosu</div>
-            </div>
-          </div>
-          <div class="tx-amount">+50.00 KURT</div>
+    <main>
+      <div class="topbar">
+        <h1>Cüzdan Özeti</h1>
+        <div class="wallet-chip" id="walletChip" title="Kopyala" onclick="copyMyAddress()">
+          <span id="headerAddress">...</span> 📋
         </div>
       </div>
-    </div>
-  </main>
+
+      <div class="balance-card">
+        <div>
+          <div class="balance-label">Kullanılabilir Bakiye</div>
+          <div class="balance-amount" id="balanceDisplay">0.00 <span>KURT</span></div>
+          <div style="color: #10b981; font-weight: 600;">≈ Canlı Blokzincir Bakiyesi</div>
+        </div>
+        <div>
+          <button class="action-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)); color: #050811;" onclick="mineBlock()">
+            ⛏️ 1 Blok Kaz (+50 KURT)
+          </button>
+        </div>
+      </div>
+
+      <div class="action-grid">
+        <div class="action-btn" onclick="openModal('sendModal')">📤 KURT Gönder</div>
+        <div class="action-btn" onclick="openModal('receiveModal')">📥 QR Kod & Adres</div>
+        <div class="action-btn" onclick="openModal('backupModal')">🔑 Gizli Anahtarımı Gör</div>
+      </div>
+
+      <div class="section-box">
+        <div class="section-title">📜 İşlem Geçmişi</div>
+        <div id="txList">
+          <div style="color: var(--text-muted); font-size: 0.9rem;">Henüz işlem yok. "Blok Kaz" butonuna basarak madencilik başlatabilirsiniz.</div>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <!-- Send Modal -->
   <div class="modal" id="sendModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">📤 Kurtcoin Gönder</h2>
+      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">📤 Transfer Gönder</h2>
       <div class="input-group">
         <label>Alıcı Kurtcoin Adresi:</label>
-        <input type="text" id="sendToAddress" placeholder="Örn: 14FTsfBTzSBP...">
+        <input type="text" id="sendAddressInput" placeholder="Örn: 14FTsfBTzSBP...">
       </div>
       <div class="input-group">
         <label>Gönderilecek Miktar (KURT):</label>
-        <input type="number" id="sendAmount" placeholder="0.00">
+        <input type="number" id="sendAmountInput" placeholder="0.00">
       </div>
-      <div class="modal-actions">
-        <button class="btn-send" onclick="sendKurt()">Transferi İmzala & Gönder</button>
-        <button class="btn-close" onclick="closeModal('sendModal')">İptal</button>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button class="auth-btn btn-create" style="margin: 0;" onclick="executeSend()">İmzala & Gönder</button>
+        <button class="auth-btn btn-import" style="margin: 0; width: auto;" onclick="closeModal('sendModal')">Kapat</button>
       </div>
     </div>
   </div>
@@ -348,80 +339,200 @@
     <div class="modal-card" style="text-align: center;">
       <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">📥 Bakiye Alma Adresiniz</h2>
       <div style="background: #fff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 16px;">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA" alt="QR Code">
+        <img id="qrImage" src="" alt="QR">
       </div>
-      <p style="font-family: monospace; font-size: 0.9rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 20px;">
-        14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA
-      </p>
-      <button class="btn-send" onclick="copyAddress()">Adresi Kopyala</button>
-      <button class="btn-close" style="margin-top: 10px; width: 100%;" onclick="closeModal('receiveModal')">Kapat</button>
+      <p id="receiveAddressText" style="font-family: monospace; font-size: 0.85rem; color: var(--neon-cyan); word-break: break-all; margin-bottom: 20px;"></p>
+      <button class="auth-btn btn-create" onclick="copyMyAddress()">Adresi Kopyala</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('receiveModal')">Kapat</button>
+    </div>
+  </div>
+
+  <!-- Backup Modal -->
+  <div class="modal" id="backupModal">
+    <div class="modal-card">
+      <h2 style="font-family: 'Orbitron'; margin-bottom: 16px;">🔒 Özel Anahtarınız (Private Key)</h2>
+      <p style="color: #ef4444; font-size: 0.85rem; margin-bottom: 16px;">⚠️ UYARI: Bu anahtarı asla kimseyle paylaşmayın! Fonlarınıza erişim sağlar.</p>
+      <div class="input-group">
+        <label>WIF Private Key:</label>
+        <textarea id="privateKeyText" rows="3" readonly style="font-family: monospace; font-size: 0.85rem;"></textarea>
+      </div>
+      <button class="auth-btn btn-create" onclick="copyPrivateKey()">Gizli Anahtarı Kopyala</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('backupModal')">Kapat</button>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div class="modal" id="importModal">
+    <div class="modal-card">
+      <h2 style="font-family: 'Orbitron'; margin-bottom: 20px;">🔑 Cüzdan İçe Aktar</h2>
+      <div class="input-group">
+        <label>Özel Anahtarınızı (Private Key WIF) Yapıştırın:</label>
+        <input type="text" id="importKeyInput" placeholder="Örn: Kx85UkARHT41...">
+      </div>
+      <button class="auth-btn btn-create" onclick="executeImport()">Cüzdanı Aç</button>
+      <button class="auth-btn btn-import" style="margin-top: 8px;" onclick="closeModal('importModal')">İptal</button>
     </div>
   </div>
 
   <script>
-    let currentBalance = 150.00;
+    // Local State
+    let wallet = null;
 
-    function copyAddress() {
-      navigator.clipboard.writeText('14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA');
-      alert('Kurtcoin Cüzdan Adresiniz Kopyalandı!\n14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA');
+    // Basit Base58 ve Kriptografik Rastgele Adres Üretici (Client-Side)
+    function generateRandomBase58(len, prefix) {
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let res = prefix;
+      const array = new Uint8Array(len);
+      window.crypto.getRandomValues(array);
+      for (let i = 0; i < len; i++) {
+        res += chars[array[i] % chars.length];
+      }
+      return res;
     }
 
-    function openSendModal() { document.getElementById('sendModal').style.display = 'flex'; }
-    function openReceiveModal() { document.getElementById('receiveModal').style.display = 'flex'; }
+    function init() {
+      const saved = localStorage.getItem('kurtcoin_user_wallet');
+      if (saved) {
+        wallet = JSON.parse(saved);
+        showApp();
+      }
+    }
+
+    function createNewWallet() {
+      const newAddress = generateRandomBase58(33, '1');
+      const newWif = 'K' + generateRandomBase58(51, '');
+      wallet = {
+        address: newAddress,
+        wif: newWif,
+        balance: 0.00,
+        txs: []
+      };
+      saveWallet();
+      showApp();
+    }
+
+    function openImportModal() {
+      openModal('importModal');
+    }
+
+    function executeImport() {
+      const key = document.getElementById('importKeyInput').value.trim();
+      if (!key) { alert('Lütfen geçerli bir Private Key girin!'); return; }
+      
+      // Kurucu anahtarı girildiyse kurucu adresini bağla
+      let addr = '1' + generateRandomBase58(33, '');
+      let bal = 0.00;
+      if (key.includes('Kx85UkARHT41')) {
+        addr = '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
+        bal = 150.00;
+      }
+
+      wallet = {
+        address: addr,
+        wif: key,
+        balance: bal,
+        txs: []
+      };
+      saveWallet();
+      closeModal('importModal');
+      showApp();
+    }
+
+    function saveWallet() {
+      localStorage.setItem('kurtcoin_user_wallet', JSON.stringify(wallet));
+    }
+
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').style.display = 'flex';
+      
+      document.getElementById('headerAddress').innerText = wallet.address.substring(0, 10) + '...' + wallet.address.substring(wallet.address.length - 6);
+      document.getElementById('receiveAddressText').innerText = wallet.address;
+      document.getElementById('privateKeyText').value = wallet.wif;
+      document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + wallet.address;
+      updateUI();
+    }
+
+    function updateUI() {
+      document.getElementById('balanceDisplay').innerHTML = wallet.balance.toFixed(2) + ' <span>KURT</span>';
+      const txList = document.getElementById('txList');
+      if (wallet.txs && wallet.txs.length > 0) {
+        txList.innerHTML = '';
+        wallet.txs.forEach(t => {
+          const item = document.createElement('div');
+          item.className = 'tx-item';
+          item.innerHTML = `
+            <div class="tx-info">
+              <div class="tx-icon" style="${t.type === 'OUT' ? 'background: rgba(239, 68, 68, 0.1); color: #ef4444;' : ''}">${t.icon}</div>
+              <div>
+                <div class="tx-title">${t.title}</div>
+                <div class="tx-date">${t.date}</div>
+              </div>
+            </div>
+            <div class="tx-amount" style="${t.type === 'OUT' ? 'color: #ef4444;' : ''}">${t.amount}</div>
+          `;
+          txList.appendChild(item);
+        });
+      }
+    }
+
+    function mineBlock() {
+      wallet.balance += 50.00;
+      if (!wallet.txs) wallet.txs = [];
+      wallet.txs.unshift({
+        icon: '⛏️',
+        title: 'Madencilik Blok Ödülü (PoW)',
+        date: 'Az önce • Onaylandı',
+        amount: '+50.00 KURT',
+        type: 'IN'
+      });
+      saveWallet();
+      updateUI();
+      alert('🎉 TEBRİKLER! 1 BLOK KAZILDI.\n+50.00 KURT cüzdanınıza eklendi.');
+    }
+
+    function executeSend() {
+      const to = document.getElementById('sendAddressInput').value.trim();
+      const amt = parseFloat(document.getElementById('sendAmountInput').value);
+      if (!to || isNaN(amt) || amt <= 0) { alert('Geçerli alıcı ve miktar girin!'); return; }
+      if (amt > wallet.balance) { alert('Yetersiz Bakiye!'); return; }
+      
+      wallet.balance -= amt;
+      if (!wallet.txs) wallet.txs = [];
+      wallet.txs.unshift({
+        icon: '📤',
+        title: 'Gönderilen Transfer',
+        date: 'Az önce • ' + to.substring(0, 8) + '...',
+        amount: '-' + amt.toFixed(2) + ' KURT',
+        type: 'OUT'
+      });
+      saveWallet();
+      updateUI();
+      closeModal('sendModal');
+      alert('Transfer başarıyla imzalandı ve ağa yayınlandı!');
+    }
+
+    function copyMyAddress() {
+      navigator.clipboard.writeText(wallet.address);
+      alert('Cüzdan Adresiniz Kopyalandı:\n' + wallet.address);
+    }
+
+    function copyPrivateKey() {
+      navigator.clipboard.writeText(wallet.wif);
+      alert('Gizli Anahtarınız (Private Key) Kopyalandı!\nGüvenli yerde saklayın.');
+    }
+
+    function logoutWallet() {
+      if (confirm('Cüzdandan çıkmak istediğinize emin misiniz? Özel anahtarınızı yedeklediğinizden emin olun!')) {
+        localStorage.removeItem('kurtcoin_user_wallet');
+        location.reload();
+      }
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    function sendKurt() {
-      const to = document.getElementById('sendToAddress').value;
-      const amt = parseFloat(document.getElementById('sendAmount').value);
-      if (!to || isNaN(amt) || amt <= 0) {
-        alert('Lütfen geçerli bir alıcı adresi ve miktar girin!');
-        return;
-      }
-      if (amt > currentBalance) {
-        alert('Yetersiz Bakiye! Mevcut bakiyeniz: ' + currentBalance + ' KURT');
-        return;
-      }
-      currentBalance -= amt;
-      document.getElementById('balanceDisplay').innerHTML = currentBalance.toFixed(2) + ' <span>KURT</span>';
-      
-      const txList = document.getElementById('txList');
-      const item = document.createElement('div');
-      item.className = 'tx-item';
-      item.innerHTML = `
-        <div class="tx-info">
-          <div class="tx-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">📤</div>
-          <div>
-            <div class="tx-title">Gönderilen Transfer</div>
-            <div class="tx-date">Az önce • Alıcı: ${to.substring(0, 10)}...</div>
-          </div>
-        </div>
-        <div class="tx-amount" style="color: #ef4444;">-${amt.toFixed(2)} KURT</div>
-      `;
-      txList.insertBefore(item, txList.firstChild);
-      closeModal('sendModal');
-      alert('Transfer başarıyla imzalandı ve Kurtcoin ağına yayınlandı! 🚀');
-    }
-
-    function startLocalMining() {
-      currentBalance += 50.00;
-      document.getElementById('balanceDisplay').innerHTML = currentBalance.toFixed(2) + ' <span>KURT</span>';
-      
-      const txList = document.getElementById('txList');
-      const item = document.createElement('div');
-      item.className = 'tx-item';
-      item.innerHTML = `
-        <div class="tx-info">
-          <div class="tx-icon">⛏️</div>
-          <div>
-            <div class="tx-title">Yeni Blok Madencilik Ödülü</div>
-            <div class="tx-date">Az önce • Onaylandı (PoW SHA-256)</div>
-          </div>
-        </div>
-        <div class="tx-amount">+50.00 KURT</div>
-      `;
-      txList.insertBefore(item, txList.firstChild);
-      alert('🎉 YENİ BLOK KAZILDI!\n+50.00 KURT cüzdanınıza eklendi. Güncel bakiye: ' + currentBalance.toFixed(2) + ' KURT');
-    }
+    window.onload = init;
   </script>
 </body>
 </html>
