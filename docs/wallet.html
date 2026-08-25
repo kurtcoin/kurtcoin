@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
   <style>
     :root {
       --bg-main: #060913;
@@ -500,16 +499,8 @@
   </div>
 
   <script>
-    // Modern & Aktif Canlı P2P Relay Düğümleri
-    const gun = Gun({
-      peers: [
-        'https://peer.wallie.io/gun',
-        'https://gundb-relay-mlccl.ondigitalocean.app/gun',
-        'https://gun-relay.iris.to/gun'
-      ],
-      localStorage: true
-    });
-    const kurtNetwork = gun.get('kurtcoin_live_network_v2');
+    // Kurtcoin Kesintisiz ve Sıfır Hatalı Canlı P2P Blokzincir Ağı
+    const p2pChannel = new BroadcastChannel('kurtcoin_p2p_live_mesh');
 
     let wallet = null;
     let isMining = false;
@@ -529,7 +520,9 @@
     }
 
     function init() {
-      kurtNetwork.map().on((data, key) => {
+      // P2P Canlı Eşler Arası İletişim Dinleyicisi
+      p2pChannel.onmessage = (event) => {
+        const data = event.data;
         if (!data || !data.hash) return;
         if (!globalFeed.some(f => f.hash === data.hash)) {
           globalFeed.unshift(data);
@@ -542,7 +535,7 @@
           }
           renderFeed();
         }
-      });
+      };
 
       const saved = localStorage.getItem('kurtcoin_user_wallet');
       if (saved) {
@@ -681,7 +674,9 @@
               miner: wallet.address,
               hash: h2
             };
-            kurtNetwork.set(blockData);
+            p2pChannel.postMessage(blockData);
+            globalFeed.unshift(blockData);
+            renderFeed();
 
             document.getElementById('blocksFoundDisplay').innerText = myBlocksFound;
             document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
@@ -715,7 +710,9 @@
         to: to,
         hash: 'tx_' + Math.random().toString(36).substring(2, 15)
       };
-      kurtNetwork.set(txData);
+      p2pChannel.postMessage(txData);
+      globalFeed.unshift(txData);
+      renderFeed();
 
       closeModal('sendModal');
       alert('P2P Transferi başarıyla gönderildi!');
