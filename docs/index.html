@@ -27,7 +27,6 @@
       line-height: 1.6;
     }
 
-    /* Background Ambient Glow */
     .glow-orb-1 {
       position: absolute;
       top: 5%;
@@ -49,12 +48,11 @@
       z-index: -1;
     }
 
-    /* Navigation */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 8%;
+      padding: 20px 8%;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(12px);
       position: sticky;
@@ -70,6 +68,7 @@
       font-size: 1.4rem;
       letter-spacing: 2px;
       color: #fff;
+      text-decoration: none;
     }
     .brand img {
       width: 42px;
@@ -78,8 +77,9 @@
     }
     .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 28px;
       list-style: none;
+      align-items: center;
     }
     .nav-links a {
       color: var(--text-muted);
@@ -89,26 +89,46 @@
       transition: color 0.3s;
     }
     .nav-links a:hover { color: var(--neon-cyan); }
-    .btn-github {
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-wallet-nav {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
       color: #050811;
-      padding: 10px 24px;
+      padding: 10px 22px;
       border-radius: 8px;
       font-weight: 700;
+      font-size: 0.9rem;
       text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
     }
-    .btn-github:hover {
+    .btn-wallet-nav:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 0 18px rgba(0, 242, 254, 0.4);
     }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glow);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-github:hover { background: rgba(0, 242, 254, 0.1); }
 
-    /* Hero Section */
     .hero {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 80px 8% 100px;
+      padding: 70px 8% 90px;
       min-height: 80vh;
       gap: 40px;
     }
@@ -127,7 +147,7 @@
     }
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 3.8rem;
+      font-size: 3.6rem;
       font-weight: 900;
       line-height: 1.1;
       margin-bottom: 24px;
@@ -143,6 +163,7 @@
     .hero-actions {
       display: flex;
       gap: 16px;
+      flex-wrap: wrap;
     }
     .btn-primary {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
@@ -152,13 +173,20 @@
       font-weight: 700;
       font-size: 1rem;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       transition: all 0.3s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
     }
     .btn-secondary {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-glow);
       color: #fff;
-      padding: 14px 32px;
+      padding: 14px 28px;
       border-radius: 10px;
       font-weight: 600;
       text-decoration: none;
@@ -172,8 +200,8 @@
       position: relative;
     }
     .hero-visual img {
-      width: 380px;
-      height: 380px;
+      width: 360px;
+      height: 360px;
       animation: float 5s ease-in-out infinite;
       filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.35));
     }
@@ -182,7 +210,6 @@
       50% { transform: translateY(-15px) rotate(1deg); }
     }
 
-    /* Specs Section */
     .section-title {
       text-align: center;
       font-family: 'Orbitron', sans-serif;
@@ -227,7 +254,6 @@
       font-size: 0.9rem;
     }
 
-    /* Footer */
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       padding: 40px 8%;
@@ -242,16 +268,20 @@
   <div class="glow-orb-2"></div>
 
   <nav>
-    <div class="brand">
+    <a href="#" class="brand">
       <img src="kurtcoin_logo.svg" alt="Kurtcoin Logo">
       KURTCOIN
-    </div>
+    </a>
     <ul class="nav-links">
       <li><a href="#about">Hakkında</a></li>
       <li><a href="#specs">Özellikler</a></li>
       <li><a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank">Whitepaper</a></li>
+      <li><a href="wallet.html" target="_blank" style="color: var(--neon-cyan);">Web Cüzdanı</a></li>
     </ul>
-    <a href="https://github.com/kurtcoin/kurtcoin" target="_blank" class="btn-github">GitHub Reposu</a>
+    <div class="nav-actions">
+      <a href="wallet.html" target="_blank" class="btn-wallet-nav">⚡ Cüzdana Giriş / Oluştur</a>
+      <a href="https://github.com/kurtcoin/kurtcoin" target="_blank" class="btn-github">GitHub</a>
+    </div>
   </nav>
 
   <section class="hero" id="about">
@@ -262,7 +292,8 @@
         Kurtcoin (KURT), Bitcoin mimarisi üzerine kurulu, 10 kat daha hızlı blok onay süreleri ve 100 Milyonluk adil arzı ile topluluk gücünü merkeze alan yeni nesil bağımsız bir kripto para protokolüdür.
       </p>
       <div class="hero-actions">
-        <a href="https://github.com/kurtcoin/kurtcoin" target="_blank" class="btn-primary">Kaynak Kodu İncele</a>
+        <a href="wallet.html" target="_blank" class="btn-primary">💳 Cüzdan Oluştur / Giriş Yap</a>
+        <a href="https://github.com/kurtcoin/kurtcoin/releases" target="_blank" class="btn-secondary">📦 Düğüm İndir (Release)</a>
         <a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank" class="btn-secondary">Whitepaper Oku</a>
       </div>
     </div>
