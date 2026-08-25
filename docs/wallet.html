@@ -624,10 +624,16 @@
       let bal = 0.00;
       if (key.includes('Kx85UkARHT41')) {
         bal = 150.00;
-      } else {
-        // Varsa kaydedilmiş bakiyesini çek
-        const savedBal = localStorage.getItem('kurtcoin_bal_' + addr);
-        if (savedBal) bal = parseFloat(savedBal);
+      }
+      
+      // Kaydedilmiş bakiyeyi hem Key hem Adres üzerinden kontrol et
+      const savedBalByAddr = localStorage.getItem('kurtcoin_bal_' + addr);
+      const savedBalByKey = localStorage.getItem('kurtcoin_keybal_' + key);
+      
+      if (savedBalByKey) {
+        bal = parseFloat(savedBalByKey);
+      } else if (savedBalByAddr) {
+        bal = parseFloat(savedBalByAddr);
       }
 
       wallet = { address: addr, wif: key, balance: bal };
@@ -637,9 +643,13 @@
     }
 
     function saveWallet() {
+      if (!wallet) return;
       localStorage.setItem('kurtcoin_user_wallet', JSON.stringify(wallet));
-      if (wallet && wallet.address) {
+      if (wallet.address) {
         localStorage.setItem('kurtcoin_bal_' + wallet.address, wallet.balance.toString());
+      }
+      if (wallet.wif) {
+        localStorage.setItem('kurtcoin_keybal_' + wallet.wif, wallet.balance.toString());
       }
       updateUI();
     }
