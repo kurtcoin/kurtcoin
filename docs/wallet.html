@@ -539,7 +539,10 @@
       if (!data || !data.hash) return;
       if (!globalFeed.some(f => f.hash === data.hash)) {
         globalFeed.unshift(data);
-        if (data.height && data.height > globalHeight) globalHeight = data.height;
+        if (data.height && data.height >= globalHeight) {
+          globalHeight = data.height;
+          localStorage.setItem('kurtcoin_network_height', globalHeight.toString());
+        }
         const heightEl = document.getElementById('globalBlockHeightDisplay');
         if (heightEl) heightEl.innerText = globalHeight;
 
@@ -556,6 +559,13 @@
     }
 
     function init() {
+      // Hafızadaki en yüksek blok seviyesinden başla
+      const savedHeight = localStorage.getItem('kurtcoin_network_height');
+      if (savedHeight) {
+        globalHeight = parseInt(savedHeight, 10);
+        const heightEl = document.getElementById('globalBlockHeightDisplay');
+        if (heightEl) heightEl.innerText = globalHeight;
+      }
       mqttClient.on('connect', () => {
         mqttClient.subscribe(TOPIC_MAIN);
       });
