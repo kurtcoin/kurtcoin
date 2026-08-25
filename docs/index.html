@@ -294,29 +294,30 @@
       KURTCOIN
     </a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about">Hakkında</a></li>
-      <li><a href="#specs">Özellikler</a></li>
-      <li><a href="explorer.html" style="color: var(--neon-cyan);">KurtScan Gezgini</a></li>
-      <li><a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank">Whitepaper</a></li>
-      <li><a href="wallet.html" style="color: var(--neon-cyan);">Web Cüzdanı</a></li>
+      <li><a href="#about" data-i18n="nav_about">Hakkında</a></li>
+      <li><a href="#specs" data-i18n="nav_specs">Özellikler</a></li>
+      <li><a href="explorer.html" style="color: var(--neon-cyan);" data-i18n="nav_explorer">KurtScan Gezgini</a></li>
+      <li><a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank" data-i18n="nav_whitepaper">Whitepaper</a></li>
+      <li><a href="wallet.html" style="color: var(--neon-cyan);" data-i18n="nav_wallet">Web Cüzdanı</a></li>
     </ul>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="wallet.html" class="btn-wallet-nav" id="walletNavBtn">⚡ Cüzdana Giriş</a>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button id="langToggleBtn" onclick="toggleLanguage()" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-glow); color: #fff; padding: 5px 10px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">🇹🇷 TR</button>
+      <a href="wallet.html" class="btn-wallet-nav" id="walletNavBtn" data-i18n="nav_wallet_enter">⚡ Cüzdana Giriş</a>
       <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
     </div>
   </nav>
 
   <section class="hero" id="about">
     <div class="hero-content">
-      <span class="badge">🔥 KATMAN-1 BLOKZİNCİR</span>
-      <h1>THE WOLFPACK AWAKENS</h1>
-      <p class="hero-desc">
+      <span class="badge" data-i18n="hero_badge">🔥 KATMAN-1 BLOKZİNCİR</span>
+      <h1 data-i18n="hero_title">THE WOLFPACK AWAKENS</h1>
+      <p class="hero-desc" data-i18n="hero_desc">
         Kurtcoin (KURT), Bitcoin mimarisi üzerine kurulu, 10 kat daha hızlı blok onay süreleri ve 100 Milyonluk adil arzı ile topluluk gücünü merkeze alan yeni nesil bağımsız bir kripto para protokolüdür.
       </p>
       <div class="hero-actions">
-        <a href="wallet.html" class="btn-primary">💳 Cüzdan Oluştur / Giriş Yap</a>
-        <a href="https://github.com/kurtcoin/kurtcoin/releases" target="_blank" class="btn-secondary">📦 Düğüm İndir (Release)</a>
-        <a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank" class="btn-secondary">Whitepaper Oku</a>
+        <a href="wallet.html" class="btn-primary" data-i18n="btn_create_wallet">💳 Cüzdan Oluştur / Giriş Yap</a>
+        <a href="https://github.com/kurtcoin/kurtcoin/releases" target="_blank" class="btn-secondary" data-i18n="btn_download_node">📦 Düğüm İndir (Release)</a>
+        <a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank" class="btn-secondary" data-i18n="btn_read_whitepaper">Whitepaper Oku</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -324,35 +325,42 @@
     </div>
   </section>
 
-  <h2 class="section-title" id="specs">🐺 TEKNİK ÖZELLİKLER</h2>
+  <h2 class="section-title" id="specs" data-i18n="specs_title">🐺 TEKNİK ÖZELLİKLER</h2>
   <div class="specs-grid">
     <div class="card">
-      <div class="card-label">Toplam Arz</div>
-      <div class="card-val">100.000.000</div>
-      <div class="card-desc">Sabit ve deflasyonist maksimum token arzı.</div>
+      <div class="card-label" data-i18n="spec_supply_label">Toplam Arz</div>
+      <div class="card-val" data-i18n="spec_supply_val">100.000.000</div>
+      <div class="card-desc" data-i18n="spec_supply_desc">Sabit ve deflasyonist maksimum token arzı.</div>
     </div>
     <div class="card">
-      <div class="card-label">Blok Süresi</div>
-      <div class="card-val">1 Dakika</div>
-      <div class="card-desc">Bitcoin'e göre 10 kat daha hızlı işlem onay süresi.</div>
+      <div class="card-label" data-i18n="spec_blocktime_label">Blok Süresi</div>
+      <div class="card-val" data-i18n="spec_blocktime_val">1 Dakika</div>
+      <div class="card-desc" data-i18n="spec_blocktime_desc">Bitcoin'e göre 10 kat daha hızlı işlem onay süresi.</div>
     </div>
     <div class="card">
-      <div class="card-label">Genesis Ödülü</div>
-      <div class="card-val">50 KURT</div>
-      <div class="card-desc">Sıfırıncı blokta oluşturulan kurucu blok ödülü.</div>
+      <div class="card-label" data-i18n="spec_genesis_label">Genesis Ödülü</div>
+      <div class="card-val" data-i18n="spec_genesis_val">50 KURT</div>
+      <div class="card-desc" data-i18n="spec_genesis_desc">Sıfırıncı blokta oluşturulan kurucu blok ödülü.</div>
     </div>
     <div class="card">
-      <div class="card-label">Konsensüs</div>
-      <div class="card-val">PoW SHA-256</div>
-      <div class="card-desc">Madencilikle güvenceye alınan sağlam kriptografik ağ.</div>
+      <div class="card-label" data-i18n="spec_consensus_label">Konsensüs</div>
+      <div class="card-val" data-i18n="spec_consensus_val">PoW SHA-256</div>
+      <div class="card-desc" data-i18n="spec_consensus_desc">Madencilikle güvenceye alınan sağlam kriptografik ağ.</div>
     </div>
   </div>
 
   <footer>
-    <p>© 2026 Kurtcoin (KURT) Network. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.</p>
+    <p data-i18n="footer_text">© 2026 Kurtcoin (KURT) Network. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.</p>
   </footer>
 
+  <script src="i18n.js"></script>
   <script>
+    // Başlangıçta dili ve cüzdan rozetini uygula
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTranslations();
+      const langBtn = document.getElementById('langToggleBtn');
+      if (langBtn) langBtn.innerText = currentLang === 'tr' ? '🇹🇷 TR' : '🇬🇧 EN';
+    });
     // Cüzdan giriş durumunu kontrol et ve nav butonunu güncelle
     (function() {
       try {
