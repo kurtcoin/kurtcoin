@@ -248,6 +248,11 @@
       keepalive: 60
     });
     const TOPIC_MAIN = 'kurtcoin/live/mainnet';
+    const TOPIC_LEDGER = 'kurtcoin/live/ledger_state';
+
+    let networkLedger = {
+      '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 150.00
+    };
 
     let blocks = [
       { height: 2, hash: "0000021ddab423d6ea0790f8f86e9e8c6a00fbd322dad7d8e115c8c8700a42c2", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
@@ -294,13 +299,22 @@
             time: "Az önce"
           });
           document.getElementById('statBlockHeight').innerText = data.height;
+          // Ledger güncelle
+          networkLedger[data.miner] = (networkLedger[data.miner] || 0) + 50.00;
           try { localStorage.setItem('kurtcoin_global_blocks', JSON.stringify(blocks)); } catch(e){}
+          try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
           renderBlocks();
         }
       } else if (data.type === 'TRANSFER') {
         if (!txs.some(t => t.hash === data.hash)) {
           txs.unshift(data);
+          // Transfer ledger güncelle
+          if (data.to) {
+            const amt = parseFloat(data.rawAmount || data.amount);
+            if (!isNaN(amt)) networkLedger[data.to] = (networkLedger[data.to] || 0) + amt;
+          }
           try { localStorage.setItem('kurtcoin_global_txs', JSON.stringify(txs)); } catch(e){}
+          try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
           renderTxs();
         }
       }
@@ -312,18 +326,46 @@
         if (savedTxs) txs = JSON.parse(savedTxs);
         const savedBlocks = localStorage.getItem('kurtcoin_global_blocks');
         if (savedBlocks) blocks = JSON.parse(savedBlocks);
+        const savedLedger = localStorage.getItem('kurtcoin_global_ledger');
+        if (savedLedger) networkLedger = JSON.parse(savedLedger);
       } catch (e) {}
+
+      // Blok yüksekliğini kayıtlı bloklardan hesapla
+      if (blocks.length > 0) {
+        const maxH = Math.max(...blocks.map(b => b.height));
+        document.getElementById('statBlockHeight').innerText = maxH;
+      }
 
       renderBlocks();
       renderTxs();
 
       mqttClient.on('connect', () => {
         mqttClient.subscribe(TOPIC_MAIN);
+        mqttClient.subscribe(TOPIC_LEDGER);
       });
 
       mqttClient.on('message', (topic, message) => {
         try {
           const data = JSON.parse(message.toString());
+
+          // Retained Ledger — broker'dan gelen kalıcı zincir durumu
+          if (topic === TOPIC_LEDGER && data.ledger) {
+            for (const [addr, bal] of Object.entries(data.ledger)) {
+              if (!networkLedger[addr] || data.ledger[addr] > networkLedger[addr]) {
+                networkLedger[addr] = data.ledger[addr];
+              }
+            }
+            if (data.height) {
+              document.getElementById('statBlockHeight').innerText = data.height;
+            }
+            try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+            return;
+          }
+
+          // SYNC isteklerine cevap ver
+          if (data.type === 'SYNC_REQUEST') return;
+          if (data.type === 'SYNC_RESPONSE') return;
+
           handleIncomingData(data);
         } catch(e) {}
       });
@@ -386,10 +428,11 @@
 
       if (query.startsWith('1')) {
         title.innerText = "🐺 Cüzdan Adresi Sorgusu";
-        let bal = (query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA') ? "150.00 KURT (Kurucu)" : "50.00 KURT";
+        const ledgerBal = networkLedger[query] !== undefined ? networkLedger[query].toFixed(2) + ' KURT' : '0.00 KURT';
+        const isFounder = query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' ? ' (Kurucu)' : '';
         body.innerHTML = `
           <p><strong>Adres:</strong> <span style="color: var(--neon-cyan); font-family: monospace;">${query}</span></p>
-          <p><strong>Tahmini Bakiye:</strong> ${bal}</p>
+          <p><strong>Bakiye:</strong> ${ledgerBal}${isFounder}</p>
           <p><strong>Ağ:</strong> Kurtcoin Mainnet (Port 9333)</p>
           <p><strong>Durum:</strong> Aktif & Doğrulanmış</p>
         `;

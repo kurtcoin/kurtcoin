@@ -247,6 +247,8 @@
     /* Mobile Responsive Breakpoints */
     @media (max-width: 768px) {
       .nav-links { display: none; }
+      .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: rgba(10, 15, 29, 0.97); backdrop-filter: blur(16px); padding: 20px 6%; gap: 16px; border-bottom: 1px solid var(--border-glow); z-index: 99; }
+      .hamburger { display: block; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
       .hero {
         flex-direction: column-reverse;
         padding: 30px 5% 50px;
@@ -270,6 +272,9 @@
       .card { text-align: center; }
       .section-title { font-size: 1.4rem; }
     }
+    @media (min-width: 769px) {
+      .hamburger { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -281,14 +286,17 @@
       <img src="kurtcoin_logo.svg" alt="Kurtcoin Logo">
       KURTCOIN
     </a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="navLinks">
       <li><a href="#about">Hakkında</a></li>
       <li><a href="#specs">Özellikler</a></li>
-      <li><a href="explorer.html" target="_blank" style="color: var(--neon-cyan);">KurtScan Gezgini</a></li>
+      <li><a href="explorer.html" style="color: var(--neon-cyan);">KurtScan Gezgini</a></li>
       <li><a href="https://github.com/kurtcoin/kurtcoin/blob/main/WHITEPAPER.md" target="_blank">Whitepaper</a></li>
       <li><a href="wallet.html" style="color: var(--neon-cyan);">Web Cüzdanı</a></li>
     </ul>
-    <a href="wallet.html" class="btn-wallet-nav">⚡ Cüzdana Giriş</a>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="wallet.html" class="btn-wallet-nav" id="walletNavBtn">⚡ Cüzdana Giriş</a>
+      <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
   </nav>
 
   <section class="hero" id="about">
@@ -336,5 +344,23 @@
   <footer>
     <p>© 2026 Kurtcoin (KURT) Network. MIT Lisansı ile açık kaynak olarak dağıtılmaktadır.</p>
   </footer>
+
+  <script>
+    // Cüzdan giriş durumunu kontrol et ve nav butonunu güncelle
+    (function() {
+      try {
+        const saved = localStorage.getItem('kurtcoin_user_wallet');
+        if (saved) {
+          const w = JSON.parse(saved);
+          const btn = document.getElementById('walletNavBtn');
+          if (btn && w.address) {
+            const shortAddr = w.address.substring(0, 6) + '...' + w.address.substring(w.address.length - 4);
+            const bal = w.balance !== undefined ? parseFloat(w.balance).toFixed(2) : '0.00';
+            btn.innerHTML = '💳 ' + bal + ' KURT <span style="font-size:0.7rem;opacity:0.8;">(' + shortAddr + ')</span>';
+          }
+        }
+      } catch(e) {}
+    })();
+  </script>
 </body>
 </html>
