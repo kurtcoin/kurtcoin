@@ -588,20 +588,45 @@
         if (savedLedger) networkLedger = JSON.parse(savedLedger);
       } catch(e){}
 
-      // Hafızadaki en yüksek blok seviyesinden başla
       const savedHeight = localStorage.getItem('kurtcoin_network_height');
       if (savedHeight) {
         globalHeight = parseInt(savedHeight, 10);
         const heightEl = document.getElementById('globalBlockHeightDisplay');
         if (heightEl) heightEl.innerText = globalHeight;
       }
+
       mqttClient.on('connect', () => {
         mqttClient.subscribe(TOPIC_MAIN);
+        // Ağdaki diğer aktif cihazlardan tüm güncel bakiyeleri ve zincir durumunu talep et
+        broadcastP2P({ type: 'SYNC_REQUEST' });
       });
 
       mqttClient.on('message', (topic, message) => {
         try {
           const data = JSON.parse(message.toString());
+          
+          // Eğer başka bir cihaz ağa yeni bağlandıysa ve senkronizasyon istiyorsa güncel Ledger'ı ona gönder
+          if (data.type === 'SYNC_REQUEST') {
+            broadcastP2P({
+              type: 'SYNC_RESPONSE',
+              ledger: networkLedger,
+              height: globalHeight
+            });
+            return;
+          }
+
+          // Senkronizasyon cevabı geldiyse hafızamızı ve bakiyemizi hemen güncelle
+          if (data.type === 'SYNC_RESPONSE' && data.ledger) {
+            Object.assign(networkLedger, data.ledger);
+            if (data.height > globalHeight) {
+              globalHeight = data.height;
+              document.getElementById('globalBlockHeightDisplay').innerText = globalHeight;
+            }
+            try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+            recalculateBalance();
+            return;
+          }
+
           handleIncomingData(data);
         } catch(e) {}
       });
@@ -609,6 +634,7 @@
       const saved = localStorage.getItem('kurtcoin_user_wallet');
       if (saved) {
         wallet = JSON.parse(saved);
+        recalculateBalance();
         showApp();
       }
     }
