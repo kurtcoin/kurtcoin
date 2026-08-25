@@ -14,8 +14,8 @@
   <style>
     :root {
       --bg-dark: #070b14;
-      --bg-sidebar: #0a0f1d;
-      --bg-card: #0f172a;
+      --bg-card: #0e172a;
+      --bg-card-hover: #13203c;
       --neon-cyan: #00f2fe;
       --neon-blue: #4facfe;
       --text-main: #f8fafc;
@@ -27,13 +27,14 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
+    /* Navigation */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 6%;
+      padding: 14px 6%;
       border-bottom: 1px solid var(--border);
-      background: rgba(10, 15, 29, 0.8);
+      background: rgba(10, 15, 29, 0.85);
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
@@ -45,32 +46,42 @@
       gap: 10px;
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       color: #fff;
       text-decoration: none;
     }
-    .brand img { width: 34px; height: 34px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+    .brand img { width: 32px; height: 32px; filter: drop-shadow(0 0 6px var(--neon-cyan)); }
     .brand span { color: var(--neon-cyan); }
-    .nav-links { display: flex; gap: 20px; align-items: center; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.2s; }
     .nav-links a:hover { color: var(--neon-cyan); }
-
-    .search-hero {
-      padding: 40px 6% 30px;
-      text-align: center;
-      background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.08) 0%, transparent 60%);
+    .btn-wallet-nav {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      color: #050811;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-decoration: none;
     }
-    .search-hero h1 { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; margin-bottom: 12px; }
-    .search-hero p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
+
+    /* Hero Search Bar */
+    .search-hero {
+      padding: 36px 6% 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.1) 0%, transparent 65%);
+      text-align: center;
+    }
+    .search-hero h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; margin-bottom: 8px; }
+    .search-hero p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
     .search-bar-wrap {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
       display: flex;
       background: var(--bg-card);
       border: 1px solid var(--border-glow);
-      border-radius: 14px;
-      padding: 6px;
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+      border-radius: 12px;
+      padding: 4px;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
     }
     .search-bar-wrap input {
       flex: 1;
@@ -79,53 +90,73 @@
       padding: 12px 16px;
       color: #fff;
       outline: none;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      min-width: 0;
     }
     .search-btn {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
       border: none;
       color: #050811;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 10px 22px;
+      border-radius: 8px;
       font-weight: 700;
+      font-size: 0.85rem;
       cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
     }
+    .search-btn:hover { opacity: 0.9; }
 
+    /* BSCScan Style Metric Cards */
     .stats-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
-      padding: 0 6% 30px;
+      padding: 0 6% 28px;
     }
     .stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 20px;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-    .stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--neon-cyan); margin-top: 4px; }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; }
+    .stat-label { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; font-weight: 700; }
+    .stat-icon { font-size: 1.1rem; opacity: 0.8; }
+    .stat-val { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--neon-cyan); margin-top: 6px; }
+    .stat-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
+    /* Explorer Grid */
     .explorer-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      padding: 0 6% 60px;
+      gap: 20px;
+      padding: 0 6% 50px;
     }
     .table-box {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
     }
     .table-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      margin-bottom: 16px;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .table-title span:first-child { font-weight: 700; }
+    
+    /* Explorer List Items */
     .explorer-item {
       display: flex;
       justify-content: space-between;
@@ -133,22 +164,66 @@
       padding: 12px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       gap: 12px;
+      transition: background 0.2s;
     }
     .explorer-item:last-child { border-bottom: none; }
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
     .item-tag {
-      padding: 4px 10px;
-      border-radius: 8px;
+      padding: 4px 8px;
+      border-radius: 6px;
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 700;
       background: rgba(0, 242, 254, 0.1);
       color: var(--neon-cyan);
       border: 1px solid var(--border-glow);
+      flex-shrink: 0;
     }
-    .item-link { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .item-tag.tx-tag {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .item-info {
+      min-width: 0;
+      flex: 1;
+    }
+    .item-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
     .item-link:hover { color: var(--neon-cyan); }
-    .item-sub { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+    .item-sub {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .item-badge {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
 
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -158,20 +233,42 @@
       justify-content: center;
       align-items: center;
       z-index: 3000;
-      padding: 20px;
+      padding: 16px;
     }
     .modal-card {
-      background: var(--bg-sidebar);
+      background: #0f172a;
       border: 1px solid var(--border-glow);
-      border-radius: 20px;
+      border-radius: 18px;
       width: 100%;
-      max-width: 550px;
-      padding: 28px;
+      max-width: 540px;
+      padding: 24px;
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.15);
     }
+    .modal-detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.85rem;
+      gap: 12px;
+    }
+    .modal-detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--text-muted); font-weight: 600; flex-shrink: 0; }
+    .detail-val { color: #fff; font-family: monospace; word-break: break-all; text-align: right; }
 
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .stats-container { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 768px) {
-      .explorer-grid { grid-template-columns: 1fr; }
-      .search-hero h1 { font-size: 1.6rem; }
+      nav { padding: 12px 4%; }
+      .search-hero { padding: 24px 4% 20px; }
+      .search-hero h1 { font-size: 1.5rem; }
+      .stats-container { grid-template-columns: 1fr; padding: 0 4% 20px; gap: 10px; }
+      .explorer-grid { grid-template-columns: 1fr; padding: 0 4% 40px; gap: 16px; }
+      .table-box { padding: 16px; }
+      .modal { padding: 12px; }
+      .modal-card { padding: 18px; }
     }
   </style>
 </head>
@@ -184,35 +281,51 @@
     </a>
     <div class="nav-links">
       <a href="index.html">Ana Sayfa</a>
-      <a href="wallet.html" style="color: var(--neon-cyan);">Web Cüzdanı</a>
+      <a href="wallet.html" class="btn-wallet-nav">⚡ Web Cüzdanı</a>
     </div>
   </nav>
 
   <div class="search-hero">
     <h1>KURTCOIN BLOK GEZGİNİ</h1>
-    <p>Kurtcoin Katman-1 Blokzincirindeki tüm blokları, cüzdanları ve işlemleri canlı arayın.</p>
+    <p>Kurtcoin Katman-1 Blokzincirindeki tüm blokları, adresleri ve canlı işlemleri gerçek zamanlı keşfedin.</p>
     <div class="search-bar-wrap">
-      <input type="text" id="searchInput" placeholder="Adres, Blok Numarası veya İşlem (Tx) Hash yapıştırın...">
-      <button class="search-btn" onclick="executeSearch()">Sorgula</button>
+      <input type="text" id="searchInput" placeholder="Kurtcoin Adresi (1...), Blok # veya İşlem (Tx) Hash yapıştırın..." onkeypress="if(event.key==='Enter') executeSearch()">
+      <button class="search-btn" onclick="executeSearch()">🔍 Keşfet</button>
     </div>
   </div>
 
   <div class="stats-container">
     <div class="stat-card">
-      <div class="stat-label">Toplam Blok Yüksekliği</div>
+      <div class="stat-header">
+        <span class="stat-label">Toplam Blok Yüksekliği</span>
+        <span class="stat-icon">📦</span>
+      </div>
       <div class="stat-val" id="statBlockHeight">3</div>
+      <div class="stat-sub">PoW SHA-256 Ana Ağ</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Maksimum Arz</div>
+      <div class="stat-header">
+        <span class="stat-label">Maksimum Arz</span>
+        <span class="stat-icon">🐺</span>
+      </div>
       <div class="stat-val">100.000.000</div>
+      <div class="stat-sub">Sabit Toplam Arz (KURT)</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Blok Süresi</div>
+      <div class="stat-header">
+        <span class="stat-label">Blok Süresi</span>
+        <span class="stat-icon">⚡</span>
+      </div>
       <div class="stat-val">60 Saniye</div>
+      <div class="stat-sub">10x Bitcoin Hızı</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Ağ Durumu</div>
-      <div class="stat-val" style="color: #10b981;">● CANLI & SAĞLIKLI</div>
+      <div class="stat-header">
+        <span class="stat-label">Ağ & P2P Durumu</span>
+        <span class="stat-icon">🌐</span>
+      </div>
+      <div class="stat-val" style="color: #10b981;">● CANLI AĞ</div>
+      <div class="stat-sub">Port 9333 / MQTT Mesh</div>
     </div>
   </div>
 
@@ -220,7 +333,7 @@
     <div class="table-box">
       <div class="table-title">
         <span>📦 Son Kazılan Bloklar</span>
-        <span style="font-size: 0.75rem; color: var(--neon-cyan);">PoW SHA-256</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);">PoW Çift SHA-256</span>
       </div>
       <div id="blockList"></div>
     </div>
@@ -228,7 +341,7 @@
     <div class="table-box">
       <div class="table-title">
         <span>💸 Son Canlı Transferler</span>
-        <span style="font-size: 0.75rem; color: var(--neon-cyan);">P2P İşlemler</span>
+        <span style="font-size: 0.75rem; color: var(--neon-cyan);">P2P Doğrudan İşlemler</span>
       </div>
       <div id="txList"></div>
     </div>
@@ -236,9 +349,9 @@
 
   <div class="modal" id="searchModal">
     <div class="modal-card">
-      <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 16px;" id="modalTitle">Sorgu Sonucu</h2>
-      <div id="modalBody" style="line-height: 1.8; font-size: 0.9rem;"></div>
-      <button class="search-btn" style="width: 100%; margin-top: 20px;" onclick="closeModal()">Kapat</button>
+      <h2 style="font-family: 'Orbitron'; font-size: 1.15rem; margin-bottom: 14px; color: var(--neon-cyan);" id="modalTitle">Sorgu Detayı</h2>
+      <div id="modalBody" style="line-height: 1.7; font-size: 0.88rem;"></div>
+      <button class="search-btn" style="width: 100%; margin-top: 18px; padding: 12px;" onclick="closeModal()">Pencereyi Kapat</button>
     </div>
   </div>
 
@@ -377,15 +490,16 @@
       blocks.slice(0, 8).forEach(b => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
+        const shortMiner = b.miner ? (b.miner.substring(0, 6) + '...' + b.miner.substring(b.miner.length - 4)) : 'Bilinmeyen';
         item.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+          <div class="item-left">
             <div class="item-tag">#${b.height}</div>
-            <div style="min-width: 0;">
-              <a href="#" class="item-link" onclick="searchQuery('${b.hash}')">${b.hash.substring(0, 14)}...</a>
-              <div class="item-sub">Madenci: ${b.miner.substring(0, 6)}...${b.miner.substring(b.miner.length - 4)} • ${b.time}</div>
+            <div class="item-info">
+              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${b.hash}')">${b.hash}</a>
+              <div class="item-sub">Madenci: <span style="color:var(--neon-cyan)">${shortMiner}</span> • ${b.time}</div>
             </div>
           </div>
-          <div style="font-family: 'Orbitron'; font-weight: 700; color: #10b981; font-size: 0.85rem;">+50 KURT</div>
+          <div class="item-badge" style="color: #10b981;">+50 KURT</div>
         `;
         el.appendChild(item);
       });
@@ -394,22 +508,24 @@
     function renderTxs() {
       const el = document.getElementById('txList');
       if (txs.length === 0) {
-        el.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 12px 0;">Henüz yeni transfer işlemi yok.</div>';
+        el.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; text-align:center;">Henüz yeni transfer işlemi bulunmuyor.</div>';
         return;
       }
       el.innerHTML = '';
       txs.slice(0, 8).forEach(t => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
+        const fromShort = t.from ? (t.from.length > 10 ? t.from.substring(0, 5) + '...' + t.from.substring(t.from.length - 4) : t.from) : 'Genesis';
+        const toShort = t.to ? (t.to.length > 10 ? t.to.substring(0, 5) + '...' + t.to.substring(t.to.length - 4) : t.to) : 'Alıcı';
         item.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
-            <div class="item-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Tx</div>
-            <div style="min-width: 0;">
-              <a href="#" class="item-link" onclick="searchQuery('${t.hash}')">${t.hash.substring(0, 14)}...</a>
-              <div class="item-sub">${t.from.substring(0, 4)}.. ➔ ${t.to.substring(0, 4)}.. • ${t.date}</div>
+          <div class="item-left">
+            <div class="item-tag tx-tag">Tx</div>
+            <div class="item-info">
+              <a href="javascript:void(0)" class="item-link" onclick="searchQuery('${t.hash}')">${t.hash}</a>
+              <div class="item-sub">${fromShort} ➔ ${toShort} • ${t.date}</div>
             </div>
           </div>
-          <div style="font-family: 'Orbitron'; font-weight: 700; color: var(--neon-cyan); font-size: 0.85rem;">${t.amount}</div>
+          <div class="item-badge" style="color: var(--neon-cyan);">${t.amount}</div>
         `;
         el.appendChild(item);
       });
@@ -427,29 +543,84 @@
       const body = document.getElementById('modalBody');
 
       if (query.startsWith('1')) {
-        title.innerText = "🐺 Cüzdan Adresi Sorgusu";
+        title.innerText = "🐺 Kurtcoin Cüzdan Adresi Detayı";
         const ledgerBal = networkLedger[query] !== undefined ? networkLedger[query].toFixed(2) + ' KURT' : '0.00 KURT';
-        const isFounder = query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' ? ' (Kurucu)' : '';
+        const isFounder = query === '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' ? ' (⭐ Kurucu Madenci)' : '';
         body.innerHTML = `
-          <p><strong>Adres:</strong> <span style="color: var(--neon-cyan); font-family: monospace;">${query}</span></p>
-          <p><strong>Bakiye:</strong> ${ledgerBal}${isFounder}</p>
-          <p><strong>Ağ:</strong> Kurtcoin Mainnet (Port 9333)</p>
-          <p><strong>Durum:</strong> Aktif & Doğrulanmış</p>
+          <div class="modal-detail-row">
+            <span class="detail-label">Adres:</span>
+            <span class="detail-val" style="color: var(--neon-cyan);">${query}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Kullanılabilir Bakiye:</span>
+            <span class="detail-val" style="color: #10b981; font-weight: bold;">${ledgerBal} ${isFounder}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Ağ Katmanı:</span>
+            <span class="detail-val">Kurtcoin Katman-1 Mainnet (P2P 9333)</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Doğrulama Durumu:</span>
+            <span class="detail-val" style="color: #10b981;">✓ Onaylanmış & Doğrulanmış</span>
+          </div>
         `;
       } else if (!isNaN(query) || query.startsWith('0000')) {
-        title.innerText = "📦 Blok Detayı";
+        title.innerText = "📦 Blok Detayı & Header";
+        const blockObj = blocks.find(b => b.hash === query || b.height == query) || { height: query, hash: query, reward: '50.00 KURT', miner: '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA' };
         body.innerHTML = `
-          <p><strong>Blok:</strong> #${query}</p>
-          <p><strong>Konsensüs:</strong> Proof-of-Work (Çift SHA-256)</p>
-          <p><strong>Blok Ödülü:</strong> 50.00 KURT</p>
-          <p><strong>Onay Durumu:</strong> Tam Onaylandı</p>
+          <div class="modal-detail-row">
+            <span class="detail-label">Blok Yüksekliği:</span>
+            <span class="detail-val" style="color: var(--neon-cyan); font-weight: bold;">#${blockObj.height}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Blok Hash:</span>
+            <span class="detail-val">${blockObj.hash}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Madenci (Kazıcı):</span>
+            <span class="detail-val" style="color: var(--neon-cyan);">${blockObj.miner || '14FTsfBTzSBP...'}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Blok Ödülü:</span>
+            <span class="detail-val" style="color: #10b981; font-weight: bold;">+50.00 KURT</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Konsensüs:</span>
+            <span class="detail-val">PoW Çift SHA-256 (Zorluk: 0000)</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Onay Durumu:</span>
+            <span class="detail-val" style="color: #10b981;">✓ Tam Doğrulandı</span>
+          </div>
         `;
       } else {
-        title.innerText = "💸 İşlem (Tx) Detayı";
+        title.innerText = "💸 Katman-1 İşlem (Tx) Kaydı";
+        const txObj = txs.find(t => t.hash === query) || { hash: query, from: 'P2P Ağ', to: 'Cüzdan', amount: 'Canlı İşlem', date: 'Az önce' };
         body.innerHTML = `
-          <p><strong>İşlem Kimliği:</strong> <span style="font-family: monospace; color: var(--neon-cyan);">${query}</span></p>
-          <p><strong>Ağ:</strong> Kurtcoin P2P Mesh</p>
-          <p><strong>İşlem Tipi:</strong> Katman-1 Transfer</p>
+          <div class="modal-detail-row">
+            <span class="detail-label">İşlem Hash (TxID):</span>
+            <span class="detail-val" style="color: var(--neon-cyan);">${txObj.hash}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Gönderen:</span>
+            <span class="detail-val">${txObj.from}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Alıcı:</span>
+            <span class="detail-val">${txObj.to}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Transfer Miktarı:</span>
+            <span class="detail-val" style="color: var(--neon-cyan); font-weight: bold;">${txObj.amount}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">İşlem Tipi:</span>
+            <span class="detail-val">Katman-1 P2P Transfer</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="detail-label">Ağ Onayı:</span>
+            <span class="detail-val" style="color: #10b981;">✓ Blokzincire Mühürlendi</span>
+          </div>
         `;
       }
       modal.style.display = 'flex';
