@@ -110,8 +110,8 @@
     /* BSCScan Style Metric Cards */
     .stats-container {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
       padding: 0 6% 28px;
     }
     .stat-card {
@@ -321,6 +321,14 @@
     </div>
     <div class="stat-card">
       <div class="stat-header">
+        <span class="stat-label">Toplam Cüzdan / Sahip</span>
+        <span class="stat-icon">👥</span>
+      </div>
+      <div class="stat-val" id="statWalletCount">1</div>
+      <div class="stat-sub">Aktif Blokzincir Cüzdanı</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
         <span class="stat-label">Ağ & P2P Durumu</span>
         <span class="stat-icon">🌐</span>
       </div>
@@ -433,6 +441,22 @@
       }
     }
 
+    function updateWalletCount() {
+      const walletCountEl = document.getElementById('statWalletCount');
+      if (!walletCountEl) return;
+      const uniqueAddrs = new Set();
+      // 1. Ledger'daki adresler
+      Object.keys(networkLedger).forEach(a => uniqueAddrs.add(a));
+      // 2. Blok madencileri
+      blocks.forEach(b => { if (b.miner) uniqueAddrs.add(b.miner); });
+      // 3. Transfer alıcı ve göndericileri
+      txs.forEach(t => {
+        if (t.from && t.from.startsWith('1')) uniqueAddrs.add(t.from);
+        if (t.to && t.to.startsWith('1')) uniqueAddrs.add(t.to);
+      });
+      walletCountEl.innerText = Math.max(1, uniqueAddrs.size);
+    }
+
     function init() {
       try {
         const savedTxs = localStorage.getItem('kurtcoin_global_txs');
@@ -451,6 +475,7 @@
 
       renderBlocks();
       renderTxs();
+      updateWalletCount();
 
       mqttClient.on('connect', () => {
         mqttClient.subscribe(TOPIC_MAIN);
@@ -472,6 +497,7 @@
               document.getElementById('statBlockHeight').innerText = data.height;
             }
             try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
+            updateWalletCount();
             return;
           }
 
@@ -480,6 +506,7 @@
           if (data.type === 'SYNC_RESPONSE') return;
 
           handleIncomingData(data);
+          updateWalletCount();
         } catch(e) {}
       });
     }
