@@ -1,5 +1,5 @@
 ﻿const crypto = require('crypto');
-const http = require('https');
+const http = require('http');
 
 console.log('==================================================================');
 console.log('  🐺 KURTCOIN (KURT) KÜRESEL CANLI P2P BLOKZİNCİR DÜĞÜMÜ');
@@ -10,9 +10,9 @@ const FOUNDER_WALLET = '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA';
 const BLOCK_REWARD = 50.0;
 
 let networkLedger = {
-  '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 150.0
+  '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 750.0
 };
-let globalHeight = 3;
+let globalHeight = 15;
 
 function mineLiveBlock() {
   const newHeight = globalHeight + 1;
@@ -41,7 +41,7 @@ function mineLiveBlock() {
   console.log('• KurtScan Gezgini: https://kurtcoin.github.io/kurtcoin/explorer.html');
 }
 
-console.log('\n✅ Düğüm Başlatıldı! Cüzdan: ' + FOUNDER_WALLET);
+console.log('\n✅ Düğüm Başlatıldı! Hedef Cüzdan: ' + FOUNDER_WALLET);
 console.log('🔄 Otomatik PoW Madenciliği Aktif (Her 60 saniyede bir yeni blok)...');
 mineLiveBlock();
 setInterval(mineLiveBlock, 60000);
