@@ -500,12 +500,16 @@
   </div>
 
   <script>
-    const gun = Gun([
-      'https://gun-manhattan.herokuapp.com/gun',
-      'https://relay.peer.ooo/gun',
-      'https://gunjs.herokuapp.com/gun'
-    ]);
-    const kurtNetwork = gun.get('kurtcoin_mainnet_v1');
+    // Modern & Aktif Canlı P2P Relay Düğümleri
+    const gun = Gun({
+      peers: [
+        'https://peer.wallie.io/gun',
+        'https://gundb-relay-mlccl.ondigitalocean.app/gun',
+        'https://gun-relay.iris.to/gun'
+      ],
+      localStorage: true
+    });
+    const kurtNetwork = gun.get('kurtcoin_live_network_v2');
 
     let wallet = null;
     let isMining = false;
