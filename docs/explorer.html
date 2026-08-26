@@ -470,11 +470,7 @@
 
           // Retained Ledger — broker'dan gelen kalıcı zincir durumu
           if (topic === TOPIC_LEDGER && data.ledger) {
-            for (const [addr, bal] of Object.entries(data.ledger)) {
-              if (!networkLedger[addr] || data.ledger[addr] > networkLedger[addr]) {
-                networkLedger[addr] = data.ledger[addr];
-              }
-            }
+            networkLedger = Object.assign({}, data.ledger);
             if (data.height) {
               document.getElementById('statBlockHeight').innerText = data.height;
             }
