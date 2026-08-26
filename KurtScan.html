@@ -512,15 +512,17 @@
             if (data.recentBlocks && Array.isArray(data.recentBlocks)) {
               data.recentBlocks.forEach(rb => {
                 if (!blocks.some(b => b.hash === rb.hash)) {
-                  blocks.unshift({
+                  blocks.push({
                     height: rb.height,
                     hash: rb.hash,
                     miner: rb.miner,
                     reward: rb.reward || rb.amount || "50 KURT",
-                    time: "Az önce"
+                    time: rb.time || "Az önce"
                   });
                 }
               });
+              // Blokları her zaman en yüksek bloktan (en yeni) başlayarak sırala
+              blocks.sort((a, b) => b.height - a.height);
               renderBlocks();
             }
 
