@@ -383,12 +383,10 @@
     const TOPIC_LEDGER = 'kurtcoin/live/ledger_state';
 
     let networkLedger = {
-      '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 150.00
+      '14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA': 50.00
     };
 
     let blocks = [
-      { height: 2, hash: "0000021ddab423d6ea0790f8f86e9e8c6a00fbd322dad7d8e115c8c8700a42c2", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
-      { height: 1, hash: "0000f2e6e80b7c529f4e42821fab4edc59c1c12ff3e792d055a6b8ecb95e4b3b", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT", time: "Bugün" },
       { height: 0, hash: "00000ad4b509810ffa3bb36aa5071e885a34ca424d94820b44bb0c3d589364dc", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT (Genesis)", time: "Genesis 2026" }
     ];
 
@@ -399,22 +397,6 @@
         to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
         amount: "50.00 KURT",
         date: "Genesis",
-        type: "TRANSFER"
-      },
-      {
-        hash: "tx_block1_mining_reward",
-        from: "PoW Miner Node #1",
-        to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
-        amount: "50.00 KURT",
-        date: "Bugün",
-        type: "TRANSFER"
-      },
-      {
-        hash: "tx_block2_mining_reward",
-        from: "PoW Miner Node #2",
-        to: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA",
-        amount: "50.00 KURT",
-        date: "Bugün",
         type: "TRANSFER"
       }
     ];
@@ -508,20 +490,20 @@
               document.getElementById('statBlockHeight').innerText = data.height;
             }
 
-            // Retained Blok Geçmişini Explorer'a aktar
-            if (data.recentBlocks && Array.isArray(data.recentBlocks)) {
-              data.recentBlocks.forEach(rb => {
-                if (!blocks.some(b => b.hash === rb.hash)) {
-                  blocks.push({
-                    height: rb.height,
-                    hash: rb.hash,
-                    miner: rb.miner,
-                    reward: rb.reward || rb.amount || "50 KURT",
-                    time: rb.time || "Az önce"
-                  });
-                }
-              });
-              // Blokları her zaman en yüksek bloktan (en yeni) başlayarak sırala
+            // Retained Blok Geçmişini Explorer'a tam senkronize aktar
+            if (data.recentBlocks && Array.isArray(data.recentBlocks) && data.recentBlocks.length > 0) {
+              const incoming = data.recentBlocks.map(rb => ({
+                height: rb.height,
+                hash: rb.hash,
+                miner: rb.miner,
+                reward: rb.reward || rb.amount || "50 KURT",
+                time: rb.time || "Az önce"
+              }));
+              // Genesis bloğunu da koru
+              if (!incoming.some(b => b.height === 0)) {
+                incoming.push({ height: 0, hash: "00000ad4b509810ffa3bb36aa5071e885a34ca424d94820b44bb0c3d589364dc", miner: "14FTsfBTzSBP9Zm9W65W1YNUEYhXJ3t6PA", reward: "50 KURT (Genesis)", time: "Genesis 2026" });
+              }
+              blocks = incoming;
               blocks.sort((a, b) => b.height - a.height);
               renderBlocks();
             }
