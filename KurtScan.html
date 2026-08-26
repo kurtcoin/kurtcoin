@@ -456,14 +456,14 @@
       const walletCountEl = document.getElementById('statWalletCount');
       if (!walletCountEl) return;
       const uniqueAddrs = new Set();
-      // 1. Ledger'daki adresler
-      Object.keys(networkLedger).forEach(a => uniqueAddrs.add(a));
-      // 2. Blok madencileri
-      blocks.forEach(b => { if (b.miner) uniqueAddrs.add(b.miner); });
-      // 3. Transfer alıcı ve göndericileri
+      // 1. Ledger'daki tüm bakiyeli cüzdanlar
+      Object.keys(networkLedger).forEach(a => { if (a && a.startsWith('1')) uniqueAddrs.add(a.trim()); });
+      // 2. Kazılan bloklardaki madenci cüzdanları
+      blocks.forEach(b => { if (b.miner && b.miner.startsWith('1')) uniqueAddrs.add(b.miner.trim()); });
+      // 3. Transferlerdeki tüm alıcı ve gönderici cüzdanlar
       txs.forEach(t => {
-        if (t.from && t.from.startsWith('1')) uniqueAddrs.add(t.from);
-        if (t.to && t.to.startsWith('1')) uniqueAddrs.add(t.to);
+        if (t.from && t.from.startsWith('1')) uniqueAddrs.add(t.from.trim());
+        if (t.to && t.to.startsWith('1')) uniqueAddrs.add(t.to.trim());
       });
       walletCountEl.innerText = Math.max(1, uniqueAddrs.size);
     }
