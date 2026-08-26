@@ -70,8 +70,13 @@ mqttClient.on('message', (topic, message) => {
   } catch (e) {}
 });
 
+let recentMinedBlocks = [];
+
 function publishBlock(blockPayload) {
   if (mqttClient.connected) {
+    recentMinedBlocks.unshift(blockPayload);
+    if (recentMinedBlocks.length > 20) recentMinedBlocks.pop();
+
     // 1. Canlı İşlem Kanalına Gönder (Gezgin ve Cüzdanlar Anında Yakalar)
     mqttClient.publish(TOPIC_MAIN, JSON.stringify(blockPayload));
 
@@ -79,6 +84,7 @@ function publishBlock(blockPayload) {
     mqttClient.publish(TOPIC_LEDGER, JSON.stringify({
       height: blockPayload.height,
       ledger: networkLedger,
+      recentBlocks: recentMinedBlocks,
       timestamp: Date.now()
     }), { retain: true });
   }

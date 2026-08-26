@@ -604,11 +604,16 @@
       }
     }
 
-    // Ledger'ı MQTT broker'a RETAINED olarak yaz — broker 7/24 açık full node gibi davranır
-    // Herhangi bir cihaz bağlandığında broker bu mesajı anında teslim eder
+    // Ledger'ı ve Blok Geçmişini MQTT broker'a RETAINED olarak yaz
     function publishLedger() {
       if (mqttClient && mqttClient.connected) {
-        const state = JSON.stringify({ ledger: networkLedger, height: globalHeight, ts: Date.now() });
+        const state = JSON.stringify({ 
+          ledger: networkLedger, 
+          height: globalHeight, 
+          recentBlocks: globalFeed.filter(f => f.type === 'MINING').slice(0, 15),
+          recentTxs: globalFeed.filter(f => f.type === 'TRANSFER').slice(0, 15),
+          ts: Date.now() 
+        });
         mqttClient.publish(TOPIC_LEDGER, state, { retain: true });
       }
     }
@@ -708,6 +713,17 @@
               if (hEl) hEl.innerText = globalHeight;
               localStorage.setItem('kurtcoin_network_height', globalHeight.toString());
             }
+
+            // Canlı blok akışını yeni bağlanan cihaza (mobilde de) doldur
+            if (data.recentBlocks && Array.isArray(data.recentBlocks)) {
+              data.recentBlocks.forEach(rb => {
+                if (!globalFeed.some(f => f.hash === rb.hash)) {
+                  globalFeed.push(rb);
+                }
+              });
+              renderFeed();
+            }
+
             try { localStorage.setItem('kurtcoin_global_ledger', JSON.stringify(networkLedger)); } catch(e){}
             recalculateBalance();
             return;
