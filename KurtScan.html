@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>KurtScan — Kurtcoin Katman-1 Blokzincir Gezgini</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" href="favicon.png">
@@ -451,21 +454,7 @@
     }
 
     function init() {
-      try {
-        const savedTxs = localStorage.getItem('kurtcoin_global_txs');
-        if (savedTxs) txs = JSON.parse(savedTxs);
-        const savedBlocks = localStorage.getItem('kurtcoin_global_blocks');
-        if (savedBlocks) blocks = JSON.parse(savedBlocks);
-        const savedLedger = localStorage.getItem('kurtcoin_global_ledger');
-        if (savedLedger) networkLedger = JSON.parse(savedLedger);
-      } catch (e) {}
-
-      // Blok yüksekliğini kayıtlı bloklardan hesapla
-      if (blocks.length > 0) {
-        const maxH = Math.max(...blocks.map(b => b.height));
-        document.getElementById('statBlockHeight').innerText = maxH;
-      }
-
+      // Önce temiz Genesis ve son bilinen durumu çiz, hemen ardından canlı MQTT verisini yükle
       renderBlocks();
       renderTxs();
       updateWalletCount();
