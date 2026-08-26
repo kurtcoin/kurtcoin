@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Kurtcoin Live P2P Web Wallet & Miner — The Wolfpack Network</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" href="favicon.png">
@@ -700,13 +703,7 @@
           // olmasa bile!)
           // ═══════════════════════════════════════════════════════════
           if (topic === TOPIC_LEDGER && data.ledger) {
-            const remoteLedger = data.ledger;
-            // En yüksek bakiyeleri al (merge)
-            for (const [addr, bal] of Object.entries(remoteLedger)) {
-              if (!networkLedger[addr] || remoteLedger[addr] > networkLedger[addr]) {
-                networkLedger[addr] = remoteLedger[addr];
-              }
-            }
+            networkLedger = Object.assign({}, data.ledger);
             if (data.height && data.height > globalHeight) {
               globalHeight = data.height;
               const hEl = document.getElementById('globalBlockHeightDisplay');
